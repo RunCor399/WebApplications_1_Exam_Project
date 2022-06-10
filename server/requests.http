@@ -1,0 +1,49 @@
+GET http://localhost:3001/films HTTP/1.1
+content-type: application/json
+
+###
+
+GET http://localhost:3001/films/bestRated HTTP/1.1
+content-type: application/json
+
+###
+
+GET http://localhost:3001/film/10 HTTP/1.1
+content-type: application/json
+
+###
+
+POST http://localhost:3001/addFilm HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Interstellar II",
+    "favorite": 1,
+    "watchdate": "2022-03-14",
+    "rating": 5,
+    "user": 4
+}
+
+###
+
+PUT http://localhost:3001/editFilm/10 HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Interstellar 3",
+    //"watchdate": "NULL"
+    "user":123
+}
+
+###
+
+PUT http://localhost:3001/favFilm/10 HTTP/1.1
+content-type: application/json
+
+
+
+###
+
+DELETE http://localhost:3001/deleteFilm/10 HTTP/1.1
+content-type: application/json
+
