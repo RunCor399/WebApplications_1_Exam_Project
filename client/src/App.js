@@ -20,36 +20,28 @@ function App() {
   const[mode, setMode] = useState("view");
 
   const getCourses = async () => {
-    const courses = await API.getAllCourses();
+    const courses = await API.getAllCourses().catch((err) => {
+      console.log("Get Courses error", err);
+    });
     setCourses(courses);
   }
-
-  //Not triggering after login
-  //Still need to implement get of fullCourses
-  /*In controller create a method that given a list of course
-    returns the list of fullCourses (with prep and incompatible)
-    as done in the method to get all courses (in server too)
-  */
-  /*
-  this method will be called both from get courses and get studyplan.
-  they will be able to pass the list of courses already retrieved
-  */
-  const getStudyPlan = async () => {
+  
+  async function getStudyPlan() {
     if(user.id !== undefined){
-      const studyPlan = await API.getStudyPlan(user.id).catch((err) => {
-        console.log(err);
+      const studyPlanCourses = await API.getStudyPlan(user.id).catch((err) => {
+        console.log("get study plan", err);
       });
+
+      setStudyPlan(studyPlanCourses);
     }
   }
 
   useEffect(() => {
     async function checkAuth(){
       const user = await API.getUserInfo();
+  
       setUser(user);
       setLoggedIn(true);
-
-      getCourses();
-      getStudyPlan();
     };
 
     checkAuth();
@@ -57,14 +49,19 @@ function App() {
   }, []);
 
   useEffect(() => {
-    getCourses();
-    getStudyPlan();
-  }, [loggedIn]);
+    getCourses();   
+    
+    if(loggedIn){
+      getStudyPlan();
+    }
+
+  }, [loggedIn, user]);
 
 
   const handleLogin = async (credentials) => {
     try {
       const user = await API.login(credentials);
+      setUser(user)
       setLoggedIn(true);
       setMessage({msg: `Welcome, ${user.name}!`, type: 'success'});
     }catch(err) {
@@ -82,8 +79,9 @@ function App() {
     });
     setLoggedIn(false);
 
-    setCourses([]);
+    setStudyPlan([]);
     setMessage('');
+    setUser([]);
   };
 
 
@@ -94,7 +92,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                loggedIn ? <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} handleLogout={handleLogout} courses={courses}/> : <Navigate replace to='/login'/>
+                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan}/>
               } />
 
               <Route path='/login' element={

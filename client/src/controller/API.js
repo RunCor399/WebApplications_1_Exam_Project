@@ -39,9 +39,9 @@ async function getStudyPlan(id){
     });
 
     const list = await response.json();
+    //console.log("list",list);
     if (response.ok) {
-        // return list.map((fullCourse)=>{ return new Course(fullCourse.course.code, fullCourse.course.name, fullCourse.course.credits, fullCourse.course.enrolledStudents, fullCourse.course.maxStudents, fullCourse.preparatoryCourseDetails, fullCourse.incompatibleCourses)});
-        return undefined;
+         return list.map((course)=>{ return new Course(course.code, course.name, course.credits, undefined, undefined, undefined, undefined)});
     } 
     else {
         throw list;

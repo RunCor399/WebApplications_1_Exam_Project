@@ -32,7 +32,7 @@ class Controller {
     }
 
     async getStudyPlan(id){
-        const sqlQuery = "SELECT * FROM STUDY_PLAN SP, COURSES C WHERE SP.studentId = ? AND SP.courseCode = C.code";
+        const sqlQuery = "SELECT C.code AS code, C.name AS name, C.credits AS credits FROM STUDY_PLAN SP, COURSES C WHERE SP.studentId = ? AND SP.courseCode = C.code";
 
         return new Promise((resolve, reject) => {
             this.#db.all(sqlQuery, id, (err, rows) => {

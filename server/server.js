@@ -111,7 +111,7 @@ app.delete('/api/sessions/current', (req, res) => {
 //APIs
 
 //Get all courses
-app.get('/courses', isLoggedIn, async (req,res)=>{
+app.get('/courses', async (req,res)=>{
   const controller = req.app.get('controller');
   let courses = await controller.getAllCourses();
   const fullCourses = [];
@@ -148,11 +148,13 @@ app.get('/courses', isLoggedIn, async (req,res)=>{
 app.post('/studyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
+  let courses;
 
-  let courses = await controller.getStudyPlan(body["id"]).catch((err) => {
-    console.log(err);
+  await controller.getStudyPlan(body["id"]).then((res) => {
+    courses = res;
+  }).catch((err) => {
+    return res.status(error.getCode()).send(error.getMessage());
   });
-  console.log(courses);
 
-  return res.status(200)
+  return res.status(200).json(courses);
 });

@@ -31,8 +31,13 @@ function MainRoute(props) {
             </Col>
           </Row>
           <Row>
+            {props.loggedIn && <Col className="offset-md-2 col-md-8">
+              <CoursesTable listType={"studyplan"} courses={props.studyPlan}></CoursesTable>
+            </Col>}
+          </Row>
+          <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"Courses"} courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"courses"} courses={props.courses}></CoursesTable>
             </Col>
           </Row>
         </>

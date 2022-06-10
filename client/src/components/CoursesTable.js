@@ -1,17 +1,36 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Table, Accordion } from 'react-bootstrap';
-import { CourseAccordion } from './CourseDescription';
+import { Table, Accordion, Row, Col } from 'react-bootstrap';
+import { CourseAccordion, StudyPlanCourse } from './CourseDescription';
 
 
 function CoursesTable(props){
-    const courses = props.courses;
+    let courses = props.courses;
+    if(courses === undefined){
+        courses = [];
+    }
+
+    const titleDict = {"courses": "Courses", "studyplan": "Study Plan"};
 
     return (
         <>
-            <h2>{props.listType}</h2>
+            <h2>{titleDict[props.listType]}</h2>
                 <Table className="coursesTable col-md-12">
+                    {props.listType === "studyplan" && 
+                    <thead>
+                        <tr>
+                            <td>Code</td>
+                            <td>Name</td>
+                            <td>Credits</td>
+                        </tr>
+                    </thead>
+                    }
                     <tbody>
-                        {courses.map((course) => {return(<CourseAccordion key={course.code} course={course}  />)})}
+                        
+                        { props.listType === "courses" ?
+                        courses.map((course) => {return(<CourseAccordion key={course.code} course={course}  />)})
+                        :
+                        courses.map((course) => {return(<StudyPlanCourse key={course.code} course={course}></StudyPlanCourse>)})
+                        }
                     </tbody>
                 </Table>
         </>
