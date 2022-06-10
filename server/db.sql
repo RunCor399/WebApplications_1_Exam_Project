@@ -1,13 +1,14 @@
 
--- DROP TABLE STUDENTS;
--- CREATE TABLE STUDENTS (
---     id INTEGER PRIMARY KEY AUTOINCREMENT,
---     name TEXT,
---     type TEXT,
---     email TEXT,
---     password TEXT,
---     salt TEXT
--- );
+DROP TABLE STUDENTS;
+CREATE TABLE STUDENTS (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    type TEXT,
+    hasStudyPlan INTEGER NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    salt TEXT NOT NULL
+);
 
 -- CREATE TABLE COURSES (
 --     code TEXT PRIMARY KEY,
@@ -45,8 +46,8 @@
 
 
 -- 
--- INSERT INTO STUDENTS (name, type, email, password, salt)
--- VALUES ("tizio", "full-time", "tizio@polito.it", "1405f25115e75b7782c6c73d07070f389780476c87d7a6f7525f3fc9d64073a7", "1234567887654321");
+INSERT INTO STUDENTS (name, type, hasStudyPlan, email, password, salt)
+VALUES ("tizio", "", 0, "tizio@polito.it", "1405f25115e75b7782c6c73d07070f389780476c87d7a6f7525f3fc9d64073a7", "1234567887654321");
 
 
 

@@ -108,10 +108,7 @@ input.search-input {
   margin-left: 40px;
 }
 
-body {
-  overflow-x: hidden;
-  height: 100% !important;
-}
+
 
 
 .bt-icon-filmrow {
@@ -167,6 +164,11 @@ h2.filter-type {
 }
 
 */
+
+body {
+  overflow-x: hidden;
+  height: 100% !important;
+}
 
 .navbar {
   background-color:rgb(188, 46, 41);
@@ -265,6 +267,8 @@ h2 > .accordion-button:focus {
 h2 > .accordion-button:not(.collapsed) {
   color: #B52E29 !important;
 }
+
+
 
 
 

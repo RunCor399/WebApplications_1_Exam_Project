@@ -11,9 +11,12 @@ import API from './controller/API'
 function App() {
 
   //states
+  const [user, setUser] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const[courses, setCourses] = useState([]);
+  const[studyPlan, setStudyPlan] = useState([])
+  const[hasStudyPlan, setHasStudyPlan] = useState(false);
   const[mode, setMode] = useState("view");
 
   const getCourses = async () => {
@@ -21,10 +24,32 @@ function App() {
     setCourses(courses);
   }
 
+  //Not triggering after login
+  //Still need to implement get of fullCourses
+  /*In controller create a method that given a list of course
+    returns the list of fullCourses (with prep and incompatible)
+    as done in the method to get all courses (in server too)
+  */
+  /*
+  this method will be called both from get courses and get studyplan.
+  they will be able to pass the list of courses already retrieved
+  */
+  const getStudyPlan = async () => {
+    if(user.id !== undefined){
+      const studyPlan = await API.getStudyPlan(user.id).catch((err) => {
+        console.log(err);
+      });
+    }
+  }
+
   useEffect(() => {
     async function checkAuth(){
-      await API.getUserInfo();
+      const user = await API.getUserInfo();
+      setUser(user);
       setLoggedIn(true);
+
+      getCourses();
+      getStudyPlan();
     };
 
     checkAuth();
@@ -33,8 +58,8 @@ function App() {
 
   useEffect(() => {
     getCourses();
+    getStudyPlan();
   }, [loggedIn]);
-
 
 
   const handleLogin = async (credentials) => {
@@ -48,9 +73,13 @@ function App() {
     }
   };
 
-  //DOESN'T LOG OUT !!!
-  const handleLogout = async () => {
-    await API.logout();
+
+  const handleLogout = async (event) => {
+    event.preventDefault();
+
+    await API.logout().catch((err) => {
+      console.log(err);
+    });
     setLoggedIn(false);
 
     setCourses([]);
@@ -62,13 +91,10 @@ function App() {
   return (
       <>
         <Container fluid id='main-container'>
-          {message && <Row>
-          <Alert variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>
-          </Row> }
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                loggedIn ? <MainRoute loggedIn={loggedIn} handleLogout={handleLogout} courses={courses}/> : <Navigate replace to='/login'/>
+                loggedIn ? <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} handleLogout={handleLogout} courses={courses}/> : <Navigate replace to='/login'/>
               } />
 
               <Route path='/login' element={

@@ -1,4 +1,4 @@
-import {Button, Row, Col} from 'react-bootstrap';
+import {Button, Row, Col, Alert} from 'react-bootstrap';
 import { TopNavbar } from './TopNavbar';
 import { LoginForm } from './AuthComponents';
 import { CoursesTable } from './CoursesTable';
@@ -21,7 +21,7 @@ function DefaultRoute() {
 function MainRoute(props) {
     return (
         <>
-          <TopNavbar loggedIn={props.loggedIn} logout={props.handleLogout}></TopNavbar>
+          <TopNavbar message={props.message} setMessage={props.setMessage} loggedIn={props.loggedIn} logout={props.handleLogout}></TopNavbar>
           <Row className="col-md-12 mt-5">
             {/* <Col className="offset-md-1 col-md-6">
               <h2>Page title</h2>
@@ -32,7 +32,7 @@ function MainRoute(props) {
           </Row>
           <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"Courses"} courses={props.courses}></CoursesTable>
             </Col>
           </Row>
         </>

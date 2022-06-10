@@ -31,6 +31,21 @@ class Controller {
         });
     }
 
+    async getStudyPlan(id){
+        const sqlQuery = "SELECT * FROM STUDY_PLAN SP, COURSES C WHERE SP.studentId = ? AND SP.courseCode = C.code";
+
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, id, (err, rows) => {
+                if (err) {
+                    console.log("Database get error: err", err);
+                    reject(new Exceptions(500));
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
 
     async getIncompatibleCourses(code){
         const sqlGetIncompatibleCourses = `SELECT C.code AS code, C.name AS name FROM COURSES C, COURSE_INCOMPATIBILITY CI

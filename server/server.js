@@ -99,6 +99,7 @@ app.get('/api/sessions/current', (req, res) => {
 
 // DELETE /api/session/current
 app.delete('/api/sessions/current', (req, res) => {
+  console.log("logout");
   req.logout(() => {
     res.end();
   });
@@ -115,7 +116,7 @@ app.get('/courses', isLoggedIn, async (req,res)=>{
   let courses = await controller.getAllCourses();
   const fullCourses = [];
 
-
+  //MOVE INTO A UTILITY FUNCTION
   for(course of courses){
     let preparatoryCourse;
     let incompatibleCourses;
@@ -142,4 +143,16 @@ app.get('/courses', isLoggedIn, async (req,res)=>{
   }
 
   return res.status(200).json(fullCourses);
+});
+
+app.post('/studyPlan', isLoggedIn, async (req,res)=>{
+  const controller = req.app.get('controller');
+  const body = req.body;
+
+  let courses = await controller.getStudyPlan(body["id"]).catch((err) => {
+    console.log(err);
+  });
+  console.log(courses);
+
+  return res.status(200)
 });

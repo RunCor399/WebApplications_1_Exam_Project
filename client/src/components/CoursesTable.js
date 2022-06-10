@@ -8,7 +8,7 @@ function CoursesTable(props){
 
     return (
         <>
-            <h2>Courses/My study plan</h2>
+            <h2>{props.listType}</h2>
                 <Table className="coursesTable col-md-12">
                     <tbody>
                         {courses.map((course) => {return(<CourseAccordion key={course.code} course={course}  />)})}
