@@ -51,6 +51,89 @@ async function getStudyPlan(id){
 }
 }
 
+async function hasStudyPlan(id){
+  const url = APIURL + '/hasStudyPlan';
+
+  try {
+    const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({id : id}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
+
+    const hasStudyPlan = await response.json();
+    //console.log("list",list);
+    if (response.ok) {
+         return hasStudyPlan[0]["hasStudyPlan"];
+    } 
+    else {
+        throw hasStudyPlan;
+    }
+} catch (ex) {
+    throw ex;
+}
+}
+
+async function addStudyPlan(studentId, type){
+  const url = APIURL + '/addStudyPlan';
+
+  try {
+    const response = await fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+        body: JSON.stringify({studentId : studentId, type : type}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+         console.log("response ok");
+         return true;
+    } 
+    else {
+      console.log("response not ok");
+        return false;
+    }
+} catch (ex) {
+    throw ex;
+  }
+}
+
+
+async function deleteStudyPlan(studentId){
+  const url = APIURL + '/deleteStudyPlan';
+
+  try {
+    const response = await fetch(url, {
+        method: 'PUT',
+        credentials: 'include',
+        body: JSON.stringify({studentId : studentId}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      console.log("response ok");
+      return true;
+    } 
+    else {
+      console.log("response not ok");
+      return false;
+    }
+} catch (ex) {
+    throw ex;
+  }
+}
+
 
 
 //LOGIN APIs
@@ -98,5 +181,5 @@ async function getUserInfo() {
       }
 }
 
-const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan};
+const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan};
 export default API;

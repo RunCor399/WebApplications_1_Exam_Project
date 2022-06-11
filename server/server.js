@@ -158,3 +158,50 @@ app.post('/studyPlan', isLoggedIn, async (req,res)=>{
 
   return res.status(200).json(courses);
 });
+
+
+
+app.post('/hasStudyPlan', isLoggedIn, async (req,res)=>{
+  const controller = req.app.get('controller');
+  const body = req.body;
+  let hasStudyPlan;
+
+  await controller.hasStudyPlan(body["id"]).then((res) => {
+    hasStudyPlan = res;
+  }).catch((err) => {
+    return res.status(error.getCode()).send(error.getMessage());
+  });
+
+  console.log(hasStudyPlan);
+  return res.status(200).json(hasStudyPlan);
+});
+
+app.put('/addStudyPlan', isLoggedIn, async (req,res)=>{
+  const controller = req.app.get('controller');
+  const body = req.body;
+  let result;
+
+  await controller.addStudyPlan(body["studentId"], body["type"]).then((res) => {
+    result = res;
+  }).catch((err) => {
+    return res.status(error.getCode()).send(error.getMessage());
+  });
+
+  console.log(result);
+  return res.status(200).json(result);
+});
+
+app.put('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
+  const controller = req.app.get('controller');
+  const body = req.body;
+  let result;
+
+  await controller.deleteStudyPlan(body["studentId"]).then((res) => {
+    result = res;
+  }).catch((err) => {
+    return res.status(error.getCode()).send(error.getMessage());
+  });
+
+  console.log(result);
+  return res.status(200).json(result);
+});

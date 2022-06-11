@@ -46,6 +46,21 @@ class Controller {
         });
     }
 
+    async hasStudyPlan(id){
+        const sqlQuery = "SELECT hasStudyPlan FROM STUDENTS WHERE id = ?";
+
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, id, (err, rows) => {
+                if (err) {
+                    console.log("Database get error: err", err);
+                    reject(new Exceptions(500));
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
 
     async getIncompatibleCourses(code){
         const sqlGetIncompatibleCourses = `SELECT C.code AS code, C.name AS name FROM COURSES C, COURSE_INCOMPATIBILITY CI
@@ -69,6 +84,39 @@ class Controller {
         //console.log(code);
         return new Promise((resolve, reject) => {
             this.#db.all(sqlQuery, code, (err, rows) => {
+                if (err) {
+                    console.log("Database get error: err", err);
+                    reject(new Exceptions(500));
+                } else {
+                    //console.log(rows);
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    async addStudyPlan(studentId, type){
+        const sqlQuery = `UPDATE STUDENTS SET type = ?, hasStudyPlan = 1 WHERE id = ?;`;
+
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, type, studentId, (err, rows) => {
+                if (err) {
+                    console.log("Database get error: err", err);
+                    reject(new Exceptions(500));
+                } else {
+                    //console.log(rows);
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    async deleteStudyPlan(studentId){
+        //NEED TO ALSO DELETE ALL ENTRIES FROM STUDYPLAN WITH id = studentId
+        const sqlQuery = `UPDATE STUDENTS SET type = "", hasStudyPlan = 0 WHERE id = ?;`;
+
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, studentId, (err, rows) => {
                 if (err) {
                     console.log("Database get error: err", err);
                     reject(new Exceptions(500));

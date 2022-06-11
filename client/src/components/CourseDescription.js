@@ -2,6 +2,7 @@ import '../App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Accordion, Table, Row, Col} from 'react-bootstrap';
+import { useEffect } from 'react';
 
 
 
@@ -10,6 +11,40 @@ function CourseAccordion(props){
     const course = props.course;
     const preparatoryCourse = course.preparatoryCourse;
     const incompatibleCourses = course.incompatibleCourses;
+
+    const studyPlan = props.studyPlan;
+
+    //console.log(props.studyPlan);
+    /*
+    Perform integrity checks
+    result of checks will be shown in the accordion itself
+    */
+
+    const checkPreparatoryCourse = () => {
+        const checkResult = studyPlan.filter((spCourse) => spCourse.code === preparatoryCourse.code);
+        if(checkResult.length === 1){
+            //ok
+            console.log("prep found");
+        }
+        else{
+            console.log("missing prep", preparatoryCourse.name,  " for ", course.name);
+            //missing prep
+        }
+    }
+
+    
+
+    useEffect(() => {  
+    
+        if(props.preparatoryCourse !== undefined){
+            checkPreparatoryCourse();
+        }
+        else{
+            console.log("still");
+        }
+    
+    }, [props.preparatoryCourse]);
+    
 
     return (
       <tr className='col-md-11'>
