@@ -51,7 +51,7 @@ function App() {
     };
 
     checkAuth();
-    getStudyPlan();
+    //getStudyPlan();
     
   }, []);
 

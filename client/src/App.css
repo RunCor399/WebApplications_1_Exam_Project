@@ -268,7 +268,9 @@ h2 > .accordion-button:not(.collapsed) {
   color: #B52E29 !important;
 }
 
-
+.course-error {
+  padding: 5px 12px !important;
+}
 
 
 

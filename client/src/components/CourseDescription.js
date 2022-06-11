@@ -1,49 +1,61 @@
 import '../App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Accordion, Table, Row, Col} from 'react-bootstrap';
-import { useEffect } from 'react';
+import {Accordion, Table, Row, Col, Alert} from 'react-bootstrap';
+import { useEffect, useState } from 'react';
 
 
 
 
 function CourseAccordion(props){
+    const [errorsChecked, setErrorsChecked] = useState(false);
+    const [errors, setErrors] = useState([]);
+
     const course = props.course;
     const preparatoryCourse = course.preparatoryCourse;
     const incompatibleCourses = course.incompatibleCourses;
 
     const studyPlan = props.studyPlan;
 
-    //console.log(props.studyPlan);
-    /*
-    Perform integrity checks
-    result of checks will be shown in the accordion itself
-    */
 
     const checkPreparatoryCourse = () => {
         const checkResult = studyPlan.filter((spCourse) => spCourse.code === preparatoryCourse.code);
-        if(checkResult.length === 1){
-            //ok
-            console.log("prep found");
-        }
-        else{
-            console.log("missing prep", preparatoryCourse.name,  " for ", course.name);
-            //missing prep
+        if(checkResult.length !== 1){
+            let error = "Preparatory course '" + preparatoryCourse.name + "' is not present in the Study Plan";
+            setErrors([...errors, error]);
         }
     }
+
+    const checkIncompatibleCourses = () => {
+        for(let incompatibleCourse of incompatibleCourses){
+            for(let studyPlanCourse of studyPlan){
+                if(incompatibleCourse.code === studyPlanCourse.code){
+                    let error = "Incompatible with course '" + studyPlanCourse.name + "'";
+                    setErrors([...errors, error]);
+                }
+            }
+        }
+    }
+
 
     
 
     useEffect(() => {  
-    
-        if(props.preparatoryCourse !== undefined){
-            checkPreparatoryCourse();
+        if(studyPlan.length > 0){
+            if(course.preparatoryCourse !== undefined && !errorsChecked){
+                checkPreparatoryCourse();
+                
+            }
+            if(incompatibleCourses !== undefined && !errorsChecked){
+                checkIncompatibleCourses();
+            }
+
+            setErrorsChecked(true);
         }
-        else{
-            console.log("still");
-        }
-    
-    }, [props.preparatoryCourse]);
+        
+
+        
+    }, [studyPlan.length > 0]);
     
 
     return (
@@ -52,7 +64,7 @@ function CourseAccordion(props){
             <Accordion>
                 <Accordion.Item eventKey={course.code}>
                     <Accordion.Header>
-                        <CourseMain course={course}></CourseMain>
+                        <CourseMain errors={errors} course={course}></CourseMain>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h5>Preparatory Course:</h5>
@@ -82,6 +94,10 @@ function CourseMain(props){
                     <h3 className="courseName">{props.course.name}</h3>
                 </Col>
             </Row>
+            {props.errors.length > 0 && <Row>
+                {props.errors.map((error) => {return(<Alert key={props.errors.indexOf(error)} className="col-md-12 course-error" variant="danger">{error}</Alert>)})}
+            </Row>}
+
             <Row className="col-md-11 mt-5">
                 <Col className="col-md-4">
                     <Row className="">
