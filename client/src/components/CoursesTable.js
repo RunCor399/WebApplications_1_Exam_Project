@@ -13,16 +13,17 @@ function CoursesTable(props){
         courses = [];
     }
 
-    const computeTotalCredits = () => {
-        if(props.listType === "studyplan"){
-            const totalCredits = props.courses.map((spCourse) => spCourse.credits).reduce((partial, value) => partial + value, 0);
-            setStudyPlanCredits(totalCredits);
-        }
+    const computeTotalCredits = (courses) => {
+        let totalCredits = courses.map((spCourse) => spCourse.credits).reduce((partial, value) => partial + value, 0);
+
+        return totalCredits;
     }
 
 
     useEffect(() => {
-        computeTotalCredits();
+        if(props.listType === "studyplan"){
+            setStudyPlanCredits(computeTotalCredits(courses));
+        }
     }, [props.courses])
 
     //console.log(props.creditsBoundaries)
@@ -55,7 +56,7 @@ function CoursesTable(props){
                     <tbody>
                         
                         { props.listType === "courses" ?
-                        courses.map((course) => {return(<CourseAccordion key={course.code} mode={props.mode} studyPlan={props.studyPlan} course={course}  />)})
+                        courses.map((course) => {return(<CourseAccordion key={course.code} mode={props.mode} computeTotalCredits={computeTotalCredits} creditsBoundaries={props.creditsBoundaries} studyPlan={props.studyPlan} course={course}  />)})
                         :
                         courses.map((course) => {return(<StudyPlanCourse key={course.code} course={course}></StudyPlanCourse>)})
                         }

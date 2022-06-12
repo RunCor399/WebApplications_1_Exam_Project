@@ -51,10 +51,10 @@
 
 -- UPDATE STUDENTS SET hasStudyPlan = 0 WHERE email = "tizio@polito.it";
 
-DELETE FROM STUDY_PLAN WHERE 1=1;
+-- DELETE FROM STUDY_PLAN WHERE 1=1;
 
 INSERT INTO STUDY_PLAN (studentId, courseCode)
-VALUES (1, "02GOLOV"), (1, "01SQLOV");
+VALUES (1, "01TYDOV");
 
 -- INSERT INTO COURSES (code, name, credits, enrolledStudents, maxStudents, preparatoryCourse)
 -- VALUES ("01GNLPD", "Computer Network Technologies and Services", 6, 50, 200, "02LSNMP");

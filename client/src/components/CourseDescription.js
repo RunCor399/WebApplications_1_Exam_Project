@@ -16,13 +16,14 @@ function CourseAccordion(props){
     const incompatibleCourses = course.incompatibleCourses;
 
     const studyPlan = props.studyPlan;
-
+    const myErrors = [];
 
     const checkPreparatoryCourse = () => {
         const checkResult = studyPlan.filter((spCourse) => spCourse.code === preparatoryCourse.code);
         if(checkResult.length !== 1){
             let error = "Preparatory course '" + preparatoryCourse.name + "' is not present in the Study Plan";
-            setErrors([...errors, error]);
+            myErrors.push(error);
+            //setErrors([...errors, error]);
         }
     }
 
@@ -31,12 +32,37 @@ function CourseAccordion(props){
             for(let studyPlanCourse of studyPlan){
                 if(incompatibleCourse.code === studyPlanCourse.code){
                     let error = "Incompatible with course '" + studyPlanCourse.name + "'";
-                    setErrors([...errors, error]);
+                    myErrors.push(error);
+                    //setErrors([...errors, error]);
                 }
             }
         }
     }
 
+    //Not adding more than one error (checked with 01SQLOV)
+    const checkAlreadyInStudyPlan = () => {
+        const result = studyPlan.filter((spCourse) => spCourse.code === course.code);
+        if(result.length === 1){   
+            let error = "This course is already present in the study plan";
+            myErrors.push(error);
+           // setErrors([...errors, error]);
+        }
+    }
+
+    const checkCreditsBoundaries = () => {
+        const studyPlanCredits = props.computeTotalCredits(studyPlan);
+        const futureCredits = studyPlanCredits + course.credits;
+
+        if(futureCredits > props.creditsBoundaries.max){
+            let error = "Total number of credits ("+futureCredits+") would exceed the maximum of "+props.creditsBoundaries.max+" credits";
+            myErrors.push(error);
+            //setErrors([...errors, error]);
+        }
+    }
+
+
+        
+    
 
     
 
@@ -50,13 +76,20 @@ function CourseAccordion(props){
             if(incompatibleCourses !== undefined && !errorsChecked){
                 checkIncompatibleCourses();
             }
+            if(!errorsChecked){
+                checkCreditsBoundaries();
+                checkAlreadyInStudyPlan();
+            }
 
-            setErrorsChecked(true);
+            setErrorsChecked(true); 
+            //USE PREVIOUS MANAGEMENT? [...errors, error]
+            setErrors(myErrors);
         }
         
-
         
     }, [studyPlan.length > 0, props.mode]);
+
+    //ERRORS ARE NOT PASSED TO THE COMPONENT
     
 
     return (
