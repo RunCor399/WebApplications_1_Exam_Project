@@ -166,14 +166,24 @@ app.post('/hasStudyPlan', isLoggedIn, async (req,res)=>{
   const body = req.body;
   let hasStudyPlan;
 
-  await controller.hasStudyPlan(body["id"]).then((res) => {
+  await controller.hasStudyPlan(body["id"]).then( async (res) => {
     hasStudyPlan = res;
   }).catch((err) => {
     return res.status(error.getCode()).send(error.getMessage());
   });
 
-  console.log(hasStudyPlan);
-  return res.status(200).json(hasStudyPlan);
+  if(hasStudyPlan[0]["hasStudyPlan"]){
+    await controller.getStudentType(body["id"]).then((res) => {
+      studyPlanType = res;
+    }).catch((err) => {
+      return res.status(error.getCode()).send(error.getMessage());
+    })
+
+    return res.status(200).json({hasStudyPlan : hasStudyPlan[0]["hasStudyPlan"], studyPlanType : studyPlanType[0]["type"]});
+  }
+  else{
+    return res.status(200).json({hasStudyPlan : hasStudyPlan[0]["hasStudyPlan"], studyPlanType : ""});
+  }
 });
 
 app.put('/addStudyPlan', isLoggedIn, async (req,res)=>{

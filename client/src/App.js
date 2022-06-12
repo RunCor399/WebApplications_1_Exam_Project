@@ -16,7 +16,10 @@ function App() {
   const [message, setMessage] = useState('');
   const[courses, setCourses] = useState([]);
   const[studyPlan, setStudyPlan] = useState([])
+
+  //Merge in studyPlan info
   const[hasStudyPlan, setHasStudyPlan] = useState(false);
+  const[creditsBoundaries, setCreditsBoundaries] = useState({});
   const[mode, setMode] = useState("view");
 
   const getCourses = async () => {
@@ -28,8 +31,9 @@ function App() {
   
   async function getStudyPlan() {
     if(user.id !== undefined){
-      const hasStudyPlan = await API.hasStudyPlan(user.id);
-      setHasStudyPlan(hasStudyPlan);
+      const studyPlanInfo = await API.hasStudyPlan(user.id);
+
+      setHasStudyPlan(studyPlanInfo.hasStudyPlan);
 
       if(hasStudyPlan){
         const studyPlanCourses = await API.getStudyPlan(user.id).catch((err) => {
@@ -38,6 +42,15 @@ function App() {
 
         setStudyPlan(studyPlanCourses);
       }
+    }
+  }
+
+  async function loadStudyPlanInfo() {
+    const studyPlanInfo = await API.hasStudyPlan(user.id);
+
+    if(studyPlanInfo.hasStudyPlan){
+      setCreditsBoundaries(typeToCredits[studyPlanInfo.studyPlanType]);
+      setHasStudyPlan(studyPlanInfo.hasStudyPlan);
     }
   }
 
@@ -56,17 +69,18 @@ function App() {
   }, []);
 
   useEffect(() => {  
-    
     getCourses(); 
 
     if(loggedIn){
+      loadStudyPlanInfo()
       getStudyPlan();
     }
 
     
 
-  }, [loggedIn, user, hasStudyPlan]);
+  }, [loggedIn, user, hasStudyPlan, mode]);
 
+//creditsBoundaries not passed to studyplan (add to useEffect?)
 
   const handleLogin = async (credentials) => {
     try {
@@ -99,6 +113,9 @@ function App() {
     const result = await API.addStudyPlan(user.id, type);
     //check result
     if(result){
+      const studyPlanInfo = await API.hasStudyPlan(user.id);
+
+      setCreditsBoundaries(typeToCredits[studyPlanInfo.studyPlanType]);
       setHasStudyPlan(true);
     }  
   }
@@ -108,10 +125,12 @@ function App() {
     //check result
     if(result){
       setHasStudyPlan(false);
+      setStudyPlan([]);
+      setCreditsBoundaries({});
     }  
   }
 
-
+  const typeToCredits = {"fulltime" : {min: 60, max: 80}, "partime" : {min: 20, max: 40}};
     
   return (
       <>
@@ -119,7 +138,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan}/>
+                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan}/>
               } />
 
               <Route path='/login' element={

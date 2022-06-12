@@ -41,6 +41,7 @@ function CourseAccordion(props){
     
 
     useEffect(() => {  
+        
         if(studyPlan.length > 0){
             if(course.preparatoryCourse !== undefined && !errorsChecked){
                 checkPreparatoryCourse();
@@ -55,7 +56,7 @@ function CourseAccordion(props){
         
 
         
-    }, [studyPlan.length > 0]);
+    }, [studyPlan.length > 0, props.mode]);
     
 
     return (
@@ -64,7 +65,7 @@ function CourseAccordion(props){
             <Accordion>
                 <Accordion.Item eventKey={course.code}>
                     <Accordion.Header>
-                        <CourseMain errors={errors} course={course}></CourseMain>
+                        <CourseMain errors={errors} mode={props.mode} course={course}></CourseMain>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h5>Preparatory Course:</h5>
@@ -94,7 +95,7 @@ function CourseMain(props){
                     <h3 className="courseName">{props.course.name}</h3>
                 </Col>
             </Row>
-            {props.errors.length > 0 && <Row>
+            {props.errors.length > 0 && props.mode == "edit" && <Row>
                 {props.errors.map((error) => {return(<Alert key={props.errors.indexOf(error)} className="col-md-12 course-error" variant="danger">{error}</Alert>)})}
             </Row>}
 

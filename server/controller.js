@@ -128,6 +128,22 @@ class Controller {
         });
     }
 
+    async getStudentType(studentId){
+        const sqlQuery = `SELECT type FROM STUDENTS WHERE id = ?;`;
+
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, studentId, (err, rows) => {
+                if (err) {
+                    console.log("Database get error: err", err);
+                    reject(new Exceptions(500));
+                } else {
+                    console.log(rows);
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
     
 //LOGIN Methods
 

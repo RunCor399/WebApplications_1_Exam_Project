@@ -29,8 +29,7 @@
   - Add remove button to study plan course table row
 
 
-- DB
-  - Add official records
+
 
 
 

@@ -64,13 +64,13 @@ async function hasStudyPlan(id){
         },
     });
 
-    const hasStudyPlan = await response.json();
+    const studyPlanInfo = await response.json();
     //console.log("list",list);
     if (response.ok) {
-         return hasStudyPlan[0]["hasStudyPlan"];
+         return studyPlanInfo;
     } 
     else {
-        throw hasStudyPlan;
+        throw studyPlanInfo;
     }
 } catch (ex) {
     throw ex;

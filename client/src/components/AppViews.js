@@ -23,6 +23,8 @@ function MainRoute(props) {
     const navigate = useNavigate();
     const modeDict = {"view" : "Edit", "edit" : "Save"};
 
+    //console.log(props.creditsBoundaries);
+
     const handleModeSubmit = (value) => { 
 
       if(props.mode === "view" && value === "delete"){
@@ -37,6 +39,7 @@ function MainRoute(props) {
         props.setMode("view");
       }
     }
+
 
     return (
         <>
@@ -64,12 +67,12 @@ function MainRoute(props) {
           </Row>
           <Row>
             {props.hasStudyPlan && props.loggedIn && <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"studyplan"} courses={props.studyPlan}></CoursesTable>
+              <CoursesTable listType={"studyplan"} creditsBoundaries={props.creditsBoundaries} courses={props.studyPlan}></CoursesTable>
             </Col>}
           </Row>
           <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"courses"} studyPlan={props.studyPlan} courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"courses"} mode={props.mode} studyPlan={props.studyPlan} courses={props.courses}></CoursesTable>
             </Col>
           </Row>
         </>
