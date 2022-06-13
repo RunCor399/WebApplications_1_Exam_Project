@@ -8,22 +8,21 @@ import { useEffect, useState } from 'react';
 
 
 function CourseAccordion(props){
-    const [errorsChecked, setErrorsChecked] = useState(false);
-    const [errors, setErrors] = useState([]);
+    const [courseErrors, setCourseErrors] = useState([]);
 
     const course = props.course;
     const preparatoryCourse = course.preparatoryCourse;
     const incompatibleCourses = course.incompatibleCourses;
 
     const studyPlan = props.studyPlan;
-    const myErrors = [];
+    let myErrors = [];
+
 
     const checkPreparatoryCourse = () => {
         const checkResult = studyPlan.filter((spCourse) => spCourse.code === preparatoryCourse.code);
         if(checkResult.length !== 1){
             let error = "Preparatory course '" + preparatoryCourse.name + "' is not present in the Study Plan";
             myErrors.push(error);
-            //setErrors([...errors, error]);
         }
     }
 
@@ -33,19 +32,16 @@ function CourseAccordion(props){
                 if(incompatibleCourse.code === studyPlanCourse.code){
                     let error = "Incompatible with course '" + studyPlanCourse.name + "'";
                     myErrors.push(error);
-                    //setErrors([...errors, error]);
                 }
             }
         }
     }
 
-    //Not adding more than one error (checked with 01SQLOV)
     const checkAlreadyInStudyPlan = () => {
         const result = studyPlan.filter((spCourse) => spCourse.code === course.code);
         if(result.length === 1){   
             let error = "This course is already present in the study plan";
             myErrors.push(error);
-           // setErrors([...errors, error]);
         }
     }
 
@@ -56,41 +52,29 @@ function CourseAccordion(props){
         if(futureCredits > props.creditsBoundaries.max){
             let error = "Total number of credits ("+futureCredits+") would exceed the maximum of "+props.creditsBoundaries.max+" credits";
             myErrors.push(error);
-            //setErrors([...errors, error]);
         }
     }
 
 
-        
-    
 
-    
-
-    useEffect(() => {  
-        
+    useEffect(() => {
         if(studyPlan.length > 0){
-            if(course.preparatoryCourse !== undefined && !errorsChecked){
+            console.log("triggered", props.mode);
+            if(course.preparatoryCourse !== undefined){
                 checkPreparatoryCourse();
                 
             }
-            if(incompatibleCourses !== undefined && !errorsChecked){
+            if(incompatibleCourses !== undefined){
                 checkIncompatibleCourses();
             }
-            if(!errorsChecked){
-                checkCreditsBoundaries();
-                checkAlreadyInStudyPlan();
-            }
 
-            setErrorsChecked(true); 
-            //USE PREVIOUS MANAGEMENT? [...errors, error]
-            setErrors(myErrors);
+            checkCreditsBoundaries();
+            checkAlreadyInStudyPlan();
+
+            setCourseErrors(myErrors);
         }
+    }, [props.mode === "edit"])
         
-        
-    }, [studyPlan.length > 0, props.mode]);
-
-    //ERRORS ARE NOT PASSED TO THE COMPONENT
-    
 
     return (
       <tr className='col-md-11'>
@@ -98,7 +82,7 @@ function CourseAccordion(props){
             <Accordion>
                 <Accordion.Item eventKey={course.code}>
                     <Accordion.Header>
-                        <CourseMain errors={errors} mode={props.mode} course={course}></CourseMain>
+                        <CourseMain errors={courseErrors} mode={props.mode} course={course}></CourseMain>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h5>Preparatory Course:</h5>

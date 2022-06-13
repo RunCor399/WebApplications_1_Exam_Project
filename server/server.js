@@ -215,3 +215,14 @@ app.put('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
   console.log(result);
   return res.status(200).json(result);
 });
+
+app.post('/addCourseToStudyPlan', isLoggedIn, async (req,res)=>{
+  const controller = req.app.get('controller');
+  const body = req.body;
+
+  await controller.addCourseToStudyPlan(body["studentId"], body["courseCode"]).then(() => {
+    return res.status(200);
+  }).catch((error) => {
+    return res.status(error.getCode()).send(error.getMessage());
+  });
+});
