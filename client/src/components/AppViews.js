@@ -72,7 +72,7 @@ function MainRoute(props) {
           </Row>
           <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"courses"} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlan={props.studyPlan} courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"courses"} addCourseToStudyPlan={props.addCourseToStudyPlan} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlan={props.studyPlan} courses={props.courses}></CoursesTable>
             </Col>
           </Row>
         </>

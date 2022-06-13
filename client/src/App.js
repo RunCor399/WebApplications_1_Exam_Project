@@ -130,6 +130,14 @@ function App() {
     }  
   }
 
+  const addCourse = async (courseCode) => {
+    await API.addCourseToStudyPlan(user.id, courseCode).then(() => {
+      getStudyPlan();
+    }).catch(() => {
+      console.log("error");
+    })
+  }
+
   const typeToCredits = {"fulltime" : {min: 60, max: 80}, "partime" : {min: 20, max: 40}};
     
   return (
@@ -138,7 +146,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan}/>
+                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} addCourseToStudyPlan={addCourse} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan}/>
               } />
 
               <Route path='/login' element={

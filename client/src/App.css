@@ -272,6 +272,26 @@ h2 > .accordion-button:not(.collapsed) {
   padding: 5px 12px !important;
 }
 
+/* .maincourse-row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+} */
+
+.addCourseButton {
+  font-size: 34px;
+  color: #198754;
+}
+
+.alreadyCourseIcon {
+  font-size: 34px;
+  color: #198754;
+}
+
+/* .addCourseButton:hover {
+  font-size: 34px;
+  color: #198754;
+  background-color: white;
+} */
 
 
 

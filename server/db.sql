@@ -53,8 +53,10 @@
 
 -- DELETE FROM STUDY_PLAN WHERE 1=1;
 
-INSERT INTO STUDY_PLAN (studentId, courseCode)
-VALUES (1, "01TYDOV");
+-- INSERT INTO STUDY_PLAN (studentId, courseCode)
+-- VALUES (1, "01TYDOV");
+DELETE FROM STUDY_PLAN WHERE courseCode = "02GRSOV";
+UPDATE COURSES SET enrolledStudents = 0 WHERE code = "02GRSOV";
 
 -- INSERT INTO COURSES (code, name, credits, enrolledStudents, maxStudents, preparatoryCourse)
 -- VALUES ("01GNLPD", "Computer Network Technologies and Services", 6, 50, 200, "02LSNMP");

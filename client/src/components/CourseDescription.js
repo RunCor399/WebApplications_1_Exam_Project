@@ -2,6 +2,7 @@ import '../App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Accordion, Table, Row, Col, Alert} from 'react-bootstrap';
+import { BsPlusCircleFill, BsCheckLg } from "react-icons/bs";
 import { useEffect, useState } from 'react';
 
 
@@ -22,7 +23,8 @@ function CourseAccordion(props){
         const checkResult = studyPlan.filter((spCourse) => spCourse.code === preparatoryCourse.code);
         if(checkResult.length !== 1){
             let error = "Preparatory course '" + preparatoryCourse.name + "' is not present in the Study Plan";
-            myErrors.push(error);
+            let code = "preparatory";
+            myErrors.push({errorCode: code, errorMsg : error});
         }
     }
 
@@ -31,7 +33,8 @@ function CourseAccordion(props){
             for(let studyPlanCourse of studyPlan){
                 if(incompatibleCourse.code === studyPlanCourse.code){
                     let error = "Incompatible with course '" + studyPlanCourse.name + "'";
-                    myErrors.push(error);
+                    let code = "incompatible";
+                    myErrors.push({errorCode: code, errorMsg : error});
                 }
             }
         }
@@ -41,7 +44,8 @@ function CourseAccordion(props){
         const result = studyPlan.filter((spCourse) => spCourse.code === course.code);
         if(result.length === 1){   
             let error = "This course is already present in the study plan";
-            myErrors.push(error);
+            let code = "already";
+            myErrors.push({errorCode: code, errorMsg : error});
         }
     }
 
@@ -51,7 +55,8 @@ function CourseAccordion(props){
 
         if(futureCredits > props.creditsBoundaries.max){
             let error = "Total number of credits ("+futureCredits+") would exceed the maximum of "+props.creditsBoundaries.max+" credits";
-            myErrors.push(error);
+            let code = "credits";
+            myErrors.push({errorCode: code, errorMsg : error});
         }
     }
 
@@ -82,7 +87,7 @@ function CourseAccordion(props){
             <Accordion>
                 <Accordion.Item eventKey={course.code}>
                     <Accordion.Header>
-                        <CourseMain errors={courseErrors} mode={props.mode} course={course}></CourseMain>
+                        <CourseMain addCourseToStudyPlan={props.addCourseToStudyPlan} errors={courseErrors} mode={props.mode} course={course}></CourseMain>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h5>Preparatory Course:</h5>
@@ -101,24 +106,42 @@ function CourseAccordion(props){
 }
 
 function CourseMain(props){
+    const handleAdd = (event) => {
+        event.stopPropagation();
+        props.addCourseToStudyPlan(props.course.code)
+    }
+
+    const courseAlreadyPresent = () => {
+        const result = props.errors.map((error) => error.errorCode).filter((code) => code === "already");
+        return result.length > 0;
+    }
+
     return (
         <>
-            <Row>
-            <Row className='col-md-11'>
+            <Row className='col-md-12'>
+            <Row className='col-md-12 maincourse-row'>
                 <Col className='col-md-4'>
                     <h3 className="courseCode">{props.course.code}</h3> 
                 </Col>
-                <Col className='col-md-8'>
+                <Col className='col-md-7'>
                     <h3 className="courseName">{props.course.name}</h3>
                 </Col>
+                {props.mode === "edit" && props.errors.length === 0 && <Col>
+                    <BsPlusCircleFill onClick={(event) => {handleAdd(event)}} className="addCourseButton mt-1"></BsPlusCircleFill>
+                </Col>}
+                {props.mode === "edit" && courseAlreadyPresent() &&
+                <Col>
+                <BsCheckLg className="alreadyCourseIcon"></BsCheckLg>
+                </Col>
+                }
             </Row>
             {props.errors.length > 0 && props.mode == "edit" && <Row>
-                {props.errors.map((error) => {return(<Alert key={props.errors.indexOf(error)} className="col-md-12 course-error" variant="danger">{error}</Alert>)})}
+                {props.errors.map((error) => {return(<Alert key={props.errors.indexOf(error)} className="col-md-12 course-error" variant="danger">{error.errorMsg}</Alert>)})}
             </Row>}
 
             <Row className="col-md-11 mt-5">
                 <Col className="col-md-4">
-                    <Row className="">
+                    <Row>
                         <h6 className="courseCFULabel col-md-5">Credits: </h6>
                         <h6 className="courseCFU col-md-2 px-0">{props.course.credits}</h6>
                     </Row>

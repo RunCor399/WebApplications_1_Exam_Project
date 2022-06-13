@@ -105,6 +105,34 @@ async function addStudyPlan(studentId, type){
   }
 }
 
+async function addCourseToStudyPlan(studentId, courseCode){
+  const url = APIURL + '/addCourseToStudyPlan';
+
+  try {
+    const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
+
+    //const result = await response.json();
+
+    if (response.ok) {
+         console.log("response ok");
+         return true;
+    } 
+    else {
+      console.log("response not ok");
+        return false;
+    }
+} catch (ex) {
+    throw ex;
+  }
+}
+
 
 async function deleteStudyPlan(studentId){
   const url = APIURL + '/deleteStudyPlan';
@@ -181,5 +209,5 @@ async function getUserInfo() {
       }
 }
 
-const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan};
+const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan};
 export default API;
