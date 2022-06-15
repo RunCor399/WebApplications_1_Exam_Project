@@ -16,7 +16,7 @@ class Controller {
 
 
     async getAllCourses(){
-        const sqlQuery = "SELECT * FROM COURSES;";
+        const sqlQuery = "SELECT * FROM COURSES ORDER BY name;";
 
         
         return new Promise((resolve, reject) => {
@@ -125,6 +125,7 @@ class Controller {
                 } 
                 else {
                     await this.updateEnrolledStudents("add", courseCode).then(() => {
+                        console.log("Deleted ", courseCode, " from student ", studentId);
                         resolve(rows);
                     }).catch((err) => {
                         console.log(err);
@@ -137,7 +138,25 @@ class Controller {
 
 
     async removeCourseFromStudyPlan(studentId, courseCode){
+        const sqlQuery = `DELETE FROM STUDY_PLAN WHERE studentId = ? AND courseCode = ?`;
 
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, studentId, courseCode, async (err, rows) => {
+                if (err) {
+                    console.log("Database get error: err", err);
+                    reject(new Exceptions(500));
+                } 
+                else {
+                    await this.updateEnrolledStudents("sub", courseCode).then(() => {
+                        console.log("Deleted ", courseCode, " from student ", studentId);
+                        resolve(rows);
+                    }).catch((err) => {
+                        console.log(err);
+                        reject(new Exceptions(500));
+                    })
+                }
+            });
+        });
     }
 
     //TO be checked
@@ -146,7 +165,7 @@ class Controller {
         if(op === "add"){
             sqlQuery = `UPDATE COURSES SET enrolledStudents = enrolledStudents + 1 WHERE code = ?`;
         }
-        else {
+        else if(op === "sub"){
             sqlQuery = `UPDATE COURSES SET enrolledStudents = enrolledStudents - 1 WHERE code = ?`;
         }
         console.log(sqlQuery);

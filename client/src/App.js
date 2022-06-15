@@ -71,7 +71,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("called");  
+    // console.log("called");  
     getCourses(); 
 
     if(loggedIn){
@@ -151,29 +151,32 @@ function App() {
     const updatedChangelog = studyPlanChangelog.filter((entry) => (entry["remove"] !== course.code) || (entry["add"] !== course.code));
     const updatedTempStudyPlan = temporaryStudyPlan.filter((entry) => entry.code !== course.code);
 
+    console.log(updatedTempStudyPlan);
     setStudyPlanChangelog([...updatedChangelog, {"remove" : course.code}]);
     setTemporaryStudyPlan(updatedTempStudyPlan);
   }
 
-  // const saveTemporaryStudyPlan = async () => {
-  //   temporaryStudyPlan.forEach(async (course) => {
-  //     if(course["add"] !== undefined){
-  //       await API.addCourseToStudyPlan(user.id, course["add"]).catch((err) => {
-  //         console.log(err);
-  //       });
-  //     }
+  const saveTemporaryStudyPlan = async () => {
+    studyPlanChangelog.forEach(async (course) => {
+      if(course["add"] !== undefined){
+        await API.addCourseToStudyPlan(user.id, course["add"]).catch((err) => {
+          console.log(err);
+        });
+      }
 
-  //     if(course["remove"] !== undefined){
-  //       await API.removeCourseFromStudyPlan(user.id, course["remove"]).catch((err) => {
-  //         console.log(err);
-  //       });
-  //     }
+      if(course["remove"] !== undefined){
+        await API.removeCourseFromStudyPlan(user.id, course["remove"]).catch((err) => {
+          console.log(err);
+        });
+      }
 
-  //     setTemporaryStudyPlan([]);
-  //   });
-  // }
+      setTemporaryStudyPlan([]);
+      setStudyPlanChangelog([]);
+    });
+  }
 
   const cancelStudyPlanChangelog = async () => {
+    console.log(studyPlanChangelog);
     setStudyPlanChangelog([]);
     setTemporaryStudyPlan([]);
   }
@@ -186,7 +189,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} initTemporaryStudyPlan={initTemporaryStudyPlan} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} addCourseToStudyPlanChangelog={addCourseToStudyPlanChangelog} cancelStudyPlanChangelog={cancelStudyPlanChangelog} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlanChangelog={studyPlanChangelog} studyPlan={studyPlan} temporaryStudyPlan={temporaryStudyPlan}/>
+                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} initTemporaryStudyPlan={initTemporaryStudyPlan} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} saveTemporaryStudyPlan={saveTemporaryStudyPlan} addCourseToStudyPlanChangelog={addCourseToStudyPlanChangelog} removeCourseFromStudyPlanChangelog={removeCourseFromStudyPlanChangelog} cancelStudyPlanChangelog={cancelStudyPlanChangelog} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlanChangelog={studyPlanChangelog} studyPlan={studyPlan} temporaryStudyPlan={temporaryStudyPlan}/>
               } />
 
               <Route path='/login' element={

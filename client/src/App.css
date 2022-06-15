@@ -293,6 +293,11 @@ h2 > .accordion-button:not(.collapsed) {
   background-color: white;
 } */
 
+.trash-icon {
+  color: #B52E29;
+  font-size: 25px;
+}
+
 
 
 

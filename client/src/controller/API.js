@@ -112,57 +112,55 @@ async function addCourseToStudyPlan(studentId, courseCode){
   const url = APIURL + '/addCourseToStudyPlan';
 
 
-  console.log(studentId, "course to add: ", courseCode);
-//   try {
-//     const response = await fetch(url, {
-//         method: 'POST',
-//         credentials: 'include',
-//         body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//     });
+  try {
+    const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
 
-//     //const result = await response.json();
-
-//     if (response.ok) {
-//          console.log("response ok");
-//          return true;
-//     } 
-//     else {
-//       console.log("response not ok");
-//         return false;
-//     }
-// } catch (ex) {
-//     throw ex;
-//   }
+    if (response.ok) {
+         console.log("response ok");
+         return true;
+    } 
+    else {
+      console.log("response not ok");
+        return false;
+    }
+} catch (ex) {
+    throw ex;
+  }
 }
 
 
 async function removeCourseFromStudyPlan(studentId, courseCode){
   const url = APIURL + '/removeCourseFromStudyPlan';
 
-//   try {
-//     const response = await fetch(url, {
-//         method: 'DELETE',
-//         credentials: 'include',
-//         body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//     });
 
-//     if (response.ok) {
-//          console.log("response ok");
-//          return true;
-//     } 
-//     else {
-//       console.log("response not ok");
-//         return false;
-//     }
-// } catch (ex) {
-//     throw ex;
-//   }
+  try {
+    const response = await fetch(url, {
+        method: 'DELETE',
+        credentials: 'include',
+        body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
+
+    if (response.ok) {
+         console.log("response ok");
+         return true;
+    } 
+    else {
+      console.log("response not ok");
+        return false;
+    }
+} catch (ex) {
+    throw ex;
+  }
 }
 
 
@@ -243,5 +241,5 @@ async function getUserInfo() {
       }
 }
 
-const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan};
+const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan, removeCourseFromStudyPlan};
 export default API;

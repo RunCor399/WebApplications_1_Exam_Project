@@ -31,7 +31,6 @@ function MainRoute(props) {
         props.deleteStudyPlan();
       }
       else if(value === "edit"){
-        //init temporary study plan
         props.initTemporaryStudyPlan();
         props.setMode("edit");
       }
@@ -77,7 +76,7 @@ function MainRoute(props) {
           </Row>
           <Row>
             {props.hasStudyPlan && props.loggedIn && <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"studyplan"} creditsBoundaries={props.creditsBoundaries} courses={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan}></CoursesTable>
+              <CoursesTable listType={"studyplan"} removeCourseFromStudyPlanChangelog={props.removeCourseFromStudyPlanChangelog} creditsBoundaries={props.creditsBoundaries} mode={props.mode} courses={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan}></CoursesTable>
             </Col>}
           </Row>
           <Row>

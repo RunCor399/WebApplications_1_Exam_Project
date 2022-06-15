@@ -226,3 +226,16 @@ app.post('/addCourseToStudyPlan', isLoggedIn, async (req,res)=>{
     return res.status(error.getCode()).send(error.getMessage());
   });
 });
+
+
+app.delete('/removeCourseFromStudyPlan', isLoggedIn, async (req,res)=>{
+  const controller = req.app.get('controller');
+  const body = req.body;
+
+  console.log(body["studentId"], body["courseCode"]);
+  await controller.removeCourseFromStudyPlan(body["studentId"], body["courseCode"]).then(() => {
+    return res.status(200);
+  }).catch((error) => {
+    return res.status(error.getCode()).send(error.getMessage());
+  });
+});

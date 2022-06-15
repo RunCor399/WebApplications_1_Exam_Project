@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Course } from "../model/course";
 import {Accordion, Table, Row, Col, Alert} from 'react-bootstrap';
-import { BsPlusCircleFill, BsCheckLg } from "react-icons/bs";
+import { BsPlusCircleFill, BsCheckLg, BsTrashFill } from "react-icons/bs";
 import { useEffect, useState } from 'react';
 
 
@@ -207,11 +207,17 @@ function CourseDetails(props){
 }
 
 function StudyPlanCourse(props){
+    const handleRemove = (event) => {
+        event.stopPropagation();
+        props.removeCourseFromStudyPlanChangelog(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
+    }
+
     return (
         <tr className='col-md-11'>
             <td className="col-md-3"><h3>{props.course.code}</h3></td>
             <td className="col-md-6"><h3>{props.course.name}</h3></td>
-            <td className="col-md-3"><h4>{props.course.credits}</h4></td>
+            <td className="col-md-2"><h4>{props.course.credits}</h4></td>
+            {props.mode === "edit" && <td className="col-md-1"><BsTrashFill className="trash-icon" onClick={(event) => {handleRemove(event)}}></BsTrashFill></td>}
         </tr>
     );
 }
