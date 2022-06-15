@@ -105,33 +105,67 @@ async function addStudyPlan(studentId, type){
   }
 }
 
+
+
+
 async function addCourseToStudyPlan(studentId, courseCode){
   const url = APIURL + '/addCourseToStudyPlan';
 
-  try {
-    const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-    });
 
-    //const result = await response.json();
+  console.log(studentId, "course to add: ", courseCode);
+//   try {
+//     const response = await fetch(url, {
+//         method: 'POST',
+//         credentials: 'include',
+//         body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//     });
 
-    if (response.ok) {
-         console.log("response ok");
-         return true;
-    } 
-    else {
-      console.log("response not ok");
-        return false;
-    }
-} catch (ex) {
-    throw ex;
-  }
+//     //const result = await response.json();
+
+//     if (response.ok) {
+//          console.log("response ok");
+//          return true;
+//     } 
+//     else {
+//       console.log("response not ok");
+//         return false;
+//     }
+// } catch (ex) {
+//     throw ex;
+//   }
 }
+
+
+async function removeCourseFromStudyPlan(studentId, courseCode){
+  const url = APIURL + '/removeCourseFromStudyPlan';
+
+//   try {
+//     const response = await fetch(url, {
+//         method: 'DELETE',
+//         credentials: 'include',
+//         body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//     });
+
+//     if (response.ok) {
+//          console.log("response ok");
+//          return true;
+//     } 
+//     else {
+//       console.log("response not ok");
+//         return false;
+//     }
+// } catch (ex) {
+//     throw ex;
+//   }
+}
+
+
 
 
 async function deleteStudyPlan(studentId){

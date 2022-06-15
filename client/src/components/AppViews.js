@@ -27,15 +27,20 @@ function MainRoute(props) {
 
     const handleModeSubmit = (value) => { 
 
-      if(props.mode === "view" && value === "delete"){
+      if(value === "delete"){
         props.deleteStudyPlan();
       }
-      else if(props.mode === "view" && value === "edit"){
-        //Change from view to edit mode
+      else if(value === "edit"){
+        //init temporary study plan
+        props.initTemporaryStudyPlan();
         props.setMode("edit");
       }
-      else if(props.mode === "edit"){
-        // Save or Cancel (from edit to view)
+      else if(value === "cancel"){
+        props.cancelStudyPlanChangelog();
+        props.setMode("view");
+      }
+      else if(value === "save"){
+        props.saveTemporaryStudyPlan();
         props.setMode("view");
       }
     }
@@ -49,17 +54,22 @@ function MainRoute(props) {
               <h2>Page title</h2>
             </Col> */}
 
-            {props.hasStudyPlan && props.loggedIn && <Col className="offset-md-9 col-md-1">
-               <Button type='submit' className="edit-button" onClick={(event) => handleModeSubmit("edit")} variant='success'>{modeDict[props.mode]}</Button>
+            {props.hasStudyPlan && props.loggedIn && props.mode === "view" &&
+            <Col className="offset-md-10 col-md-1">
+               <Button type='submit' className="edit-button" onClick={() => handleModeSubmit("edit")} variant='success'>Edit</Button>
             </Col>}
 
-            {props.hasStudyPlan && props.mode === "view" &&<Col className="col-md-2">
-               <Button type='submit' className="delete-button" onClick={() => handleModeSubmit("delete")} variant='danger'>Delete Study Plan</Button>
+            {props.hasStudyPlan && props.loggedIn && props.mode === "edit" && <Col className="offset-md-8 col-md-1">
+               <Button type='submit' className="edit-button" onClick={() => handleModeSubmit("save")} variant='success'>Save</Button>
             </Col>}
 
             <Col className="col-md-1">
               {props.mode === "edit" && <Button type='submit' className="cancel-button" onClick={() => handleModeSubmit("cancel")} variant='danger'>Cancel</Button>}
             </Col>
+
+            {props.hasStudyPlan && props.mode === "edit" &&<Col className="col-md-2">
+               <Button type='submit' className="delete-button" onClick={() => handleModeSubmit("delete")} variant='danger'>Delete Study Plan</Button>
+            </Col>}
 
             {!props.hasStudyPlan && props.loggedIn && <Col className="offset-md-8 col-md-4">
                <CreateStudyPlan addStudyPlan={props.addStudyPlan}></CreateStudyPlan>
@@ -67,12 +77,12 @@ function MainRoute(props) {
           </Row>
           <Row>
             {props.hasStudyPlan && props.loggedIn && <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"studyplan"} creditsBoundaries={props.creditsBoundaries} courses={props.studyPlan}></CoursesTable>
+              <CoursesTable listType={"studyplan"} creditsBoundaries={props.creditsBoundaries} courses={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan}></CoursesTable>
             </Col>}
           </Row>
           <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"courses"} addCourseToStudyPlan={props.addCourseToStudyPlan} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlan={props.studyPlan} courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"courses"} addCourseToStudyPlanChangelog={props.addCourseToStudyPlanChangelog} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlanChangelog={props.studyPlanChangelog} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} courses={props.courses}></CoursesTable>
             </Col>
           </Row>
         </>

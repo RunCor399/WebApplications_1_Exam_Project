@@ -1,6 +1,7 @@
 import '../App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Course } from "../model/course";
 import {Accordion, Table, Row, Col, Alert} from 'react-bootstrap';
 import { BsPlusCircleFill, BsCheckLg } from "react-icons/bs";
 import { useEffect, useState } from 'react';
@@ -64,7 +65,6 @@ function CourseAccordion(props){
 
     useEffect(() => {
         if(studyPlan.length > 0){
-            console.log("triggered", props.mode);
             if(course.preparatoryCourse !== undefined){
                 checkPreparatoryCourse();
                 
@@ -78,7 +78,7 @@ function CourseAccordion(props){
 
             setCourseErrors(myErrors);
         }
-    }, [props.mode === "edit"])
+    }, [props.mode === "edit", props.studyPlanChangelog])
         
 
     return (
@@ -87,7 +87,7 @@ function CourseAccordion(props){
             <Accordion>
                 <Accordion.Item eventKey={course.code}>
                     <Accordion.Header>
-                        <CourseMain addCourseToStudyPlan={props.addCourseToStudyPlan} errors={courseErrors} mode={props.mode} course={course}></CourseMain>
+                        <CourseMain addCourseToStudyPlanChangelog={props.addCourseToStudyPlanChangelog} studyPlan={studyPlan} errors={courseErrors} mode={props.mode} course={course}></CourseMain>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h5>Preparatory Course:</h5>
@@ -106,15 +106,40 @@ function CourseAccordion(props){
 }
 
 function CourseMain(props){
+    const [tempAlreadyPresent, setTempAlreadyPresent] = useState(false);
+
     const handleAdd = (event) => {
         event.stopPropagation();
-        props.addCourseToStudyPlan(props.course.code)
+        props.addCourseToStudyPlanChangelog(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
+        // courseAlreadyTempPresent();
     }
 
     const courseAlreadyPresent = () => {
         const result = props.errors.map((error) => error.errorCode).filter((code) => code === "already");
         return result.length > 0;
     }
+
+    // const courseAlreadyTempPresent = () => {
+        
+    //     const addResult = props.studyPlan.filter((entry) => entry.add === props.course.code);
+    //     const removeResult = props.studyPlan.filter((entry) => entry.remove === props.course.code);
+        
+    //     if(addResult.length && !removeResult.length){
+    //         setTempAlreadyPresent(true);
+    //     }
+    //     else if(removeResult.length && !addResult.length){
+    //         //might cause problems
+    //         setTempAlreadyPresent(false);
+    //     }
+    // }
+
+
+    useEffect(() => {
+        //console.log("here");
+        //courseAlreadyTempPresent();
+    }, [props.studyPlan]);
+
+        
 
     return (
         <>
@@ -126,7 +151,7 @@ function CourseMain(props){
                 <Col className='col-md-7'>
                     <h3 className="courseName">{props.course.name}</h3>
                 </Col>
-                {props.mode === "edit" && props.errors.length === 0 && <Col>
+                {props.mode === "edit" && props.errors.length === 0 && !tempAlreadyPresent && <Col>
                     <BsPlusCircleFill onClick={(event) => {handleAdd(event)}} className="addCourseButton mt-1"></BsPlusCircleFill>
                 </Col>}
                 {props.mode === "edit" && courseAlreadyPresent() &&

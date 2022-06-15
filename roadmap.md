@@ -21,7 +21,8 @@
   - Show credits count
 
 - Study Plan
-  - Add new courses to study plan
+  - Add new courses to study plan -> MANAGE USING A TEMPORARY STATE FOR COURSES IN STUDY PLAN. When "Save" is pressed, new state will overwrite the old one.
+  
   - Implement checks for the new courses
 
 - EditMode
