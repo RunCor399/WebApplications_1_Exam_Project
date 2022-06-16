@@ -134,12 +134,11 @@ function App() {
   }
 
   const initTemporaryStudyPlan = async () => {
-    console.log("temp study plan initialized");
     setTemporaryStudyPlan(studyPlan);
   }
 
   const addCourseToStudyPlanChangelog = async (course) => {
-    const updatedChangelog = studyPlanChangelog.filter((entry) => (entry["add"] !== course.code) || (entry["remove"] !== course.code));
+    const updatedChangelog = studyPlanChangelog.filter((entry) => (entry["add"] !== course.code) && (entry["remove"] !== course.code));
 
     // console.log([...updatedChangelog, {"add" : course.code}]);
     setStudyPlanChangelog([...updatedChangelog, {"add" : course.code}]);
@@ -148,16 +147,18 @@ function App() {
   }
 
   const removeCourseFromStudyPlanChangelog = async (course) => {
-    const updatedChangelog = studyPlanChangelog.filter((entry) => (entry["remove"] !== course.code) || (entry["add"] !== course.code));
+    const updatedChangelog = studyPlanChangelog.filter((entry) => (entry["remove"] !== course.code) && (entry["add"] !== course.code));
     const updatedTempStudyPlan = temporaryStudyPlan.filter((entry) => entry.code !== course.code);
 
-    console.log(updatedTempStudyPlan);
     setStudyPlanChangelog([...updatedChangelog, {"remove" : course.code}]);
     setTemporaryStudyPlan(updatedTempStudyPlan);
   }
 
   const saveTemporaryStudyPlan = async () => {
-    studyPlanChangelog.forEach(async (course) => {
+    let updatedChangeLog = checkGhostEdit();
+
+    updatedChangeLog.forEach(async (course) => {
+      console.log("nm", course);
       if(course["add"] !== undefined){
         await API.addCourseToStudyPlan(user.id, course["add"]).catch((err) => {
           console.log(err);
@@ -169,17 +170,98 @@ function App() {
           console.log(err);
         });
       }
-
-      setTemporaryStudyPlan([]);
-      setStudyPlanChangelog([]);
     });
-  }
+
+
+    setTemporaryStudyPlan([]);
+    setStudyPlanChangelog([]);
+   }
 
   const cancelStudyPlanChangelog = async () => {
-    console.log(studyPlanChangelog);
     setStudyPlanChangelog([]);
     setTemporaryStudyPlan([]);
   }
+
+  const checkGhostEdit = () => {
+    let updatedChangelog = [], tempChangelog, index = 0;
+    let modified;
+    
+    
+    // tempChangelog = studyPlanChangelog;
+    // updatedChangelog = studyPlanChangelog;
+
+    // tempChangelog.filter((clCourseRemove) => clCourseRemove["remove"] !== undefined)
+    //              .map((clCourseRemove, index) => {
+    //                console.log("exec rem");
+    //                let resultRemove = studyPlan.filter((spCourse) => spCourse.code === clCourseRemove["remove"]);
+
+    //                if(!resultRemove.length){
+    //                  updatedChangelog.splice(index, 1);
+    //                  modified = true;
+    //                }
+    //              });
+
+
+
+
+    // tempChangelog = studyPlanChangelog;
+
+    // tempChangelog.filter((clCourseAdd) => clCourseAdd["add"] !== undefined)
+    //             //  .map((clCourseAdd, index) => {
+    //             //   console.log("exec add");
+    //             //     let resultAdd = studyPlan.filter((spCourse) => spCourse.code === clCourseAdd["add"]);
+
+    //             //     if(resultAdd.length === 1){
+    //             //       updatedChangelog.splice(index, 1);
+    //             //       modified = true;
+    //             //     }
+    //             //   });
+    
+    //updatedChangelog = studyPlanChangelog.slice();
+    //tempChangelog = updatedChangelog.slice();
+    let remFlag;
+
+    for(let clCourse in studyPlanChangelog){
+      modified = false;
+      remFlag = false;
+
+      if(studyPlanChangelog[clCourse].add !== undefined){
+        console.log("a");
+        for(let spCourse in studyPlan){
+          if(studyPlan[spCourse].code === studyPlanChangelog[clCourse].add){
+            modified = true;
+          }
+        }
+
+        if(!modified){
+          console.log("not modified");
+          updatedChangelog.push({"add" : studyPlanChangelog[clCourse].add})
+        }
+      }
+      else {
+        console.log("r");
+        for(let spCourse in studyPlan){
+          if(studyPlan[spCourse].code === studyPlanChangelog[clCourse].remove){
+            remFlag = true;
+          }
+        }
+
+        if(!remFlag){
+          modified = true;
+        }
+
+        if(!modified){
+          updatedChangelog.push({"remove" : studyPlanChangelog[clCourse].remove})
+        }
+      }
+
+    }
+
+    //console.log(updatedChangelog);
+    setStudyPlanChangelog(updatedChangelog);
+    return updatedChangelog;
+  }
+
 
   const typeToCredits = {"fulltime" : {min: 60, max: 80}, "partime" : {min: 20, max: 40}};
     

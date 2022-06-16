@@ -17,17 +17,10 @@
 
 - APIs
   
-- Homepage
-  - Show credits count
+
 
 - Study Plan
-  - Add new courses to study plan -> MANAGE USING A TEMPORARY STATE FOR COURSES IN STUDY PLAN. When "Save" is pressed, new state will overwrite the old one.
-  
-  - Implement checks for the new courses
-
-- EditMode
-  - Add + button to course accordion (to be visualized only in edit)
-  - Add remove button to study plan course table row
+  - Manage integrity when removing a full study plan
 
 
 
@@ -39,25 +32,6 @@
 
 
 
-pass the study plan
-for each course
-  get incompatible 
-    for each incompatible
-      -> check if in study plan
-        yes: cannot be added
-        no: can be added
-  
-  get prep
-    -> check if in study plan
-      yes: can be added
-      no: cannot be added
-
-  -> enrolled == max
-    yes: cannot be added
-    no: can be added
 
 
-return same courses with an additional dict
-{canBeAdded: true}
-{canBeAdded: false, reason: [{"incompatibility": ["course1", "course2"]}, "preparation": "courseX", "maxStudents":true]}
   
