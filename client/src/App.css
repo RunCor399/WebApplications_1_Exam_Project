@@ -298,6 +298,10 @@ h2 > .accordion-button:not(.collapsed) {
   font-size: 25px;
 }
 
+.minCFUCol {
+  padding-left: 4px !important;
+}
+
 
 
 

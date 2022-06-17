@@ -119,19 +119,6 @@ function CourseMain(props){
         return result.length > 0;
     }
 
-    // const courseAlreadyTempPresent = () => {
-        
-    //     const addResult = props.studyPlan.filter((entry) => entry.add === props.course.code);
-    //     const removeResult = props.studyPlan.filter((entry) => entry.remove === props.course.code);
-        
-    //     if(addResult.length && !removeResult.length){
-    //         setTempAlreadyPresent(true);
-    //     }
-    //     else if(removeResult.length && !addResult.length){
-    //         //might cause problems
-    //         setTempAlreadyPresent(false);
-    //     }
-    // }
 
 
     useEffect(() => {
@@ -182,7 +169,7 @@ function CourseMain(props){
                 <Col>
                     <Row>
                         <h6 className="courseMaxLabel col-md-5">Max Students:</h6> 
-                        <h6 className="courseMax col-md-3">{props.course.maxStudents}</h6> 
+                        <h6 className="courseMax col-md-3">{props.course.maxStudents === null ? "/" : props.course.maxStudents}</h6> 
                     </Row>
                 </Col>
             </Row>
@@ -207,18 +194,44 @@ function CourseDetails(props){
 }
 
 function StudyPlanCourse(props){
+    
+    //console.log(props.studyPlan);
+    const studyPlan = props.studyPlan;
+
     const handleRemove = (event) => {
         event.stopPropagation();
-        props.removeCourseFromStudyPlanChangelog(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
+        if(!checkPreparatoryCourse()){
+            props.removeCourseFromStudyPlanChangelog(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
+        }  
+    }
+
+    const checkPreparatoryCourse = () => {
+        let result = studyPlan.filter((spCourse) => spCourse.code === props.course.preparatoryCourse);
+
+        let constraint = {value : result.length, courseName : props.course.name, preparatoryCode : props.course.preparatoryCourse}
+        result.length === 1 ? props.setPreparatoryCourseConstraint(constraint) : props.setPreparatoryCourseConstraint(constraint);
+
+        return result.length;
     }
 
     return (
-        <tr className='col-md-11'>
-            <td className="col-md-3"><h3>{props.course.code}</h3></td>
-            <td className="col-md-6"><h3>{props.course.name}</h3></td>
-            <td className="col-md-2"><h4>{props.course.credits}</h4></td>
-            {props.mode === "edit" && <td className="col-md-1"><BsTrashFill className="trash-icon" onClick={(event) => {handleRemove(event)}}></BsTrashFill></td>}
-        </tr>
+        <>
+            <tr className='col-md-8'>
+                <td className="col-md-3"><h3>{props.course.code}</h3></td>
+                <td className="col-md-6"><h3>{props.course.name}</h3></td>
+                <td className="col-md-2"><h4>{props.course.credits}</h4></td>
+                {props.mode === "edit" && <td className="col-md-1"><BsTrashFill className="trash-icon" onClick={(event) => {handleRemove(event)}}></BsTrashFill></td>}
+            
+            
+            </tr>
+            {/* {prepCourseConstraint  ? <table>
+                <tbody>
+                    <tr>
+                        <Alert className="col-md-12 course-error" variant="danger">This course cannot be removed</Alert>
+                    </tr>
+                </tbody>
+            </table> : ""} */}
+        </>
     );
 }
 

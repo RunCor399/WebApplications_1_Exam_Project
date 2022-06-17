@@ -41,7 +41,7 @@ async function getStudyPlan(id){
     const list = await response.json();
     //console.log("list",list);
     if (response.ok) {
-         return list.map((course)=>{ return new Course(course.code, course.name, course.credits, undefined, undefined, undefined, undefined)});
+         return list.map((course)=>{ return new Course(course.code, course.name, course.credits, undefined, undefined, course.preparatoryCourse, undefined)});
     } 
     else {
         throw list;
@@ -171,7 +171,7 @@ async function deleteStudyPlan(studentId){
 
   try {
     const response = await fetch(url, {
-        method: 'PUT',
+        method: 'DELETE',
         credentials: 'include',
         body: JSON.stringify({studentId : studentId}),
         headers: {

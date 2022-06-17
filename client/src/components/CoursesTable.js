@@ -1,11 +1,14 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Table, Accordion, Row, Col } from 'react-bootstrap';
+import { Table, Accordion, Row, Col, Alert } from 'react-bootstrap';
 import { CourseAccordion, StudyPlanCourse } from './CourseDescription';
 import { useEffect, useState } from 'react';
 
 
 function CoursesTable(props){
     const [studyPlanCredits, setStudyPlanCredits] = useState(0);
+    const [prepCourseConstraint, setPrepCourseConstraint] = useState(false);
+    const [constraintCourseName, setConstraintCourseName] = useState("");
+    const [constraintPrepCode, setconstraintPrepCode] = useState("");
 
 
     let courses = props.courses;
@@ -28,6 +31,12 @@ function CoursesTable(props){
 
     //console.log(props.creditsBoundaries)
 
+    const checkPreparatoryConstraint = (constraint) => {
+        setPrepCourseConstraint(constraint.value);
+        setConstraintCourseName(constraint.courseName);
+        setconstraintPrepCode(constraint.preparatoryCode);
+    }
+
 
 
     const titleDict = {"courses": "Courses", "studyplan": "Study Plan"};
@@ -38,9 +47,18 @@ function CoursesTable(props){
                 <Col className="col-md-4">
                     <h2>{titleDict[props.listType]}</h2>
                 </Col>
-                {props.listType === "studyplan" && <Col>
-                    <h3 className="offset-md-2 col-md-6">Total Credits: {studyPlanCredits}/{props.creditsBoundaries.max}</h3>
+                {props.listType === "studyplan" && <Col className="col-md-2 minCFUCol">
+                    <h5>Min Credits: {props.creditsBoundaries.min}</h5>    
                 </Col>}
+                {props.listType === "studyplan" && <Col className="offset-md-1 col-md-3">
+                    <h3>Total Credits: {studyPlanCredits}</h3>
+                </Col>}
+            </Row>
+            {props.listType === "studyplan" && <Col className="offset-md-4 col-md-2 maxCFUCol">
+                <h5>Max Credits: {props.creditsBoundaries.max}</h5>
+                </Col>}
+            <Row>
+
             </Row>
             
                 <Table className="coursesTable col-md-12">
@@ -58,10 +76,11 @@ function CoursesTable(props){
                         { props.listType === "courses" ?
                         courses.map((course) => {return(<CourseAccordion key={course.code} addCourseToStudyPlanChangelog={props.addCourseToStudyPlanChangelog} studyPlanChangelog={props.studyPlanChangelog} mode={props.mode} computeTotalCredits={computeTotalCredits} creditsBoundaries={props.creditsBoundaries} studyPlan={props.studyPlan} course={course}  />)})
                         :
-                        courses.map((course) => {return(<StudyPlanCourse key={course.code} mode={props.mode} course={course} removeCourseFromStudyPlanChangelog={props.removeCourseFromStudyPlanChangelog}></StudyPlanCourse>)})
+                        courses.map((course) => {return(<StudyPlanCourse key={course.code} setPreparatoryCourseConstraint={checkPreparatoryConstraint} mode={props.mode} course={course} studyPlan={props.studyPlan} removeCourseFromStudyPlanChangelog={props.removeCourseFromStudyPlanChangelog}></StudyPlanCourse>)})
                         }
                     </tbody>
                 </Table>
+                {prepCourseConstraint ? <Alert className="col-md-12 course-error" variant="danger">{constraintCourseName} cannot be removed: {constraintPrepCode} is preparatory</Alert> : ""}
         </>
     );
 }

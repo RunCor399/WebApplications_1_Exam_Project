@@ -120,6 +120,7 @@ function App() {
 
       setCreditsBoundaries(typeToCredits[studyPlanInfo.studyPlanType]);
       setHasStudyPlan(true);
+      setMode("view");
     }  
   }
 
@@ -130,6 +131,8 @@ function App() {
       setHasStudyPlan(false);
       setStudyPlan([]);
       setCreditsBoundaries({});
+      setStudyPlanChangelog([]);
+      setTemporaryStudyPlan([]);
     }  
   }
 
@@ -158,7 +161,6 @@ function App() {
     let updatedChangeLog = checkGhostEdit();
 
     updatedChangeLog.forEach(async (course) => {
-      console.log("nm", course);
       if(course["add"] !== undefined){
         await API.addCourseToStudyPlan(user.id, course["add"]).catch((err) => {
           console.log(err);
@@ -226,7 +228,6 @@ function App() {
       remFlag = false;
 
       if(studyPlanChangelog[clCourse].add !== undefined){
-        console.log("a");
         for(let spCourse in studyPlan){
           if(studyPlan[spCourse].code === studyPlanChangelog[clCourse].add){
             modified = true;
@@ -234,12 +235,10 @@ function App() {
         }
 
         if(!modified){
-          console.log("not modified");
           updatedChangelog.push({"add" : studyPlanChangelog[clCourse].add})
         }
       }
       else {
-        console.log("r");
         for(let spCourse in studyPlan){
           if(studyPlan[spCourse].code === studyPlanChangelog[clCourse].remove){
             remFlag = true;

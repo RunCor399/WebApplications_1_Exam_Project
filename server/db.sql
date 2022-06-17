@@ -49,7 +49,7 @@
 -- INSERT INTO STUDENTS (name, type, hasStudyPlan, email, password, salt)
 -- VALUES ("tizio", "", 0, "tizio@polito.it", "1405f25115e75b7782c6c73d07070f389780476c87d7a6f7525f3fc9d64073a7", "1234567887654321");
 
--- UPDATE STUDENTS SET hasStudyPlan = 0 WHERE email = "tizio@polito.it";
+ -- UPDATE STUDENTS SET hasStudyPlan = 1, type="partime" WHERE email = "tizio@polito.it";
 
 -- DELETE FROM STUDY_PLAN WHERE 1=1;
 
@@ -57,7 +57,7 @@
 -- VALUES (1, "01TYDOV");
 -- DELETE FROM STUDY_PLAN WHERE courseCode = "01SQMOV";
 -- UPDATE COURSES SET enrolledStudents = 1 WHERE code IN ("01SQMOV","01TYDOV","01UDFOV", "02GOLOV");
-UPDATE COURSES SET enrolledStudents = 0 WHERE code IN ("01SQLOV");
+-- UPDATE COURSES SET enrolledStudents = 0 WHERE code IN ("01SQLOV");
 
 -- INSERT INTO COURSES (code, name, credits, enrolledStudents, maxStudents, preparatoryCourse)
 -- VALUES ("01GNLPD", "Computer Network Technologies and Services", 6, 50, 200, "02LSNMP");
@@ -65,7 +65,7 @@ UPDATE COURSES SET enrolledStudents = 0 WHERE code IN ("01SQLOV");
 -- INSERT INTO COURSE_INCOMPATIBILITY (courseCode, incompatibility)
 -- VALUES ("02LSNMP", "01GNLPD");
 
---  UPDATE COURSES SET preparatoryCourse = "" WHERE credits = 8 OR credits = 10;
+  UPDATE COURSES SET enrolledStudents = 0 WHERE name="Challenge";
 
 --OFFICIAL QUERIES
 

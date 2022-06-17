@@ -32,7 +32,7 @@ class Controller {
     }
 
     async getStudyPlan(id){
-        const sqlQuery = "SELECT C.code AS code, C.name AS name, C.credits AS credits FROM STUDY_PLAN SP, COURSES C WHERE SP.studentId = ? AND SP.courseCode = C.code";
+        const sqlQuery = "SELECT C.code AS code, C.name AS name, C.credits AS credits, C.preparatoryCourse AS preparatoryCourse FROM STUDY_PLAN SP, COURSES C WHERE SP.studentId = ? AND SP.courseCode = C.code";
 
         return new Promise((resolve, reject) => {
             this.#db.all(sqlQuery, id, (err, rows) => {
@@ -243,7 +243,7 @@ class Controller {
                     reject(new Exceptions(500));
                 } else {
                     result.map((row) => row["courseCode"]).forEach(async (code) => {
-                        await updateEnrolledStudents("sub", code).catch((err) => {
+                        await this.updateEnrolledStudents("sub", code).catch((err) => {
                             reject(new Exceptions(500));
                         });
                     })

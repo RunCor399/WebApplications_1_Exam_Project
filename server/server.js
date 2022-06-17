@@ -201,7 +201,7 @@ app.put('/addStudyPlan', isLoggedIn, async (req,res)=>{
   return res.status(200).json(result);
 });
 
-app.put('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
+app.delete('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
   let result;
