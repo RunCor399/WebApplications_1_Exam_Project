@@ -79,7 +79,7 @@ class Controller {
     }
 
     async getCourseByCode(code){
-        const sqlQuery = `SELECT C.code AS code, C.name AS name FROM COURSES C WHERE C.code = ?`;
+        const sqlQuery = `SELECT C.code AS code, C.name AS name, C.credits AS credits FROM COURSES C WHERE C.code = ?`;
 
         //console.log(code);
         return new Promise((resolve, reject) => {
@@ -112,9 +112,96 @@ class Controller {
     }
 
 
+    async getPreparatoryCourse(courseCode){
+        const sqlQuery = `SELECT preparatoryCourse FROM COURSES WHERE code = ?`;
 
-    //TO be checked
+        return new Promise((resolve, reject) => {
+            this.#db.all(sqlQuery, courseCode, async (err, rows) => {
+                if(err){
+                    reject(new Exceptions(500));
+                }
+                else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+
+
+    async checkPreparatoryCourse(courseCode, studyPlan){
+        const prepCourse = await this.getPreparatoryCourse(courseCode);
+
+        const result = studyPlan.filter((course) => course.code === prepCourse);
+
+        return result.length === 1 ? true : false;
+        // false -> not ok, true -> ok
+
+
+    }
+
+    async checkIncompatibleCourses(courseCode, studyPlan){
+        //check the function to get incompatible
+        const incompatibleCourses = await this.getIncompatibleCourses(courseCode);
+
+        for(let incompatibleCourse of incompatibleCourses){
+            for(let spCourse of studyPlan){
+                if(incompatibleCourse.code === spCourse.code){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    async checkAlreadyInStudyPlan(courseCode, studyPlan){
+        const result = studyPlan.filter((spCourse) => spCourse.code === courseCode);
+
+        return result.length === 1 ? false : true; 
+    }
+
+
+    async checkCreditsMaxBoundary(courseCode, studyPlan, studentId){
+        const courseCredits = (await this.getCourseByCode(courseCode))[0].credits;
+        const currentStudyPlanCredits = studyPlan.map((spCourse) => spCourse.credits).reduce((partial, value) => partial + value, 0);
+        const studentType = (await this.getStudentType(studentId))[0].type;
+
+        const typeToMaxCFU = {"partime" : 40, "fulltime" : 80}
+        if(currentStudyPlanCredits + courseCredits > typeToMaxCFU[studentType]){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+
+    async checkCourseConstraints(studentId, courseCode){
+        const studyPlan = await this.getStudyPlan(studentId);
+
+        if(!this.checkPreparatoryCourse(courseCode, studyPlan)){
+            return false;
+        }
+        if(!this.checkIncompatibleCourses(courseCode, studyPlan)){
+            return false;
+        }
+        if(!this.checkAlreadyInStudyPlan(courseCode, studyPlan)){
+            return false;
+        }
+        if(!this.checkCreditsMaxBoundary(courseCode, studyPlan, studentId)){
+            return false;
+        }
+
+        return true;
+    }
+
+
     async addCourseToStudyPlan(studentId, courseCode){
+        if(!this.checkCourseConstraints(studentId, courseCode)){
+            return new Exceptions(500);
+        }
+
         const sqlQuery = `INSERT INTO STUDY_PLAN (studentId, courseCode) VALUES (?, ?)`;
 
         return new Promise((resolve, reject) => {
@@ -182,10 +269,7 @@ class Controller {
         });
     }
 
-    //Deletes a studyplan by:
-    // 1) Update student table (type and hasStudyPlan)
-    // 2) Update COURSES enrolledStudents (reduce count by 1 for each course in studyPlan)
-    // 3) Delete entries in STUDY_PLAN for studentId
+
     async deleteStudyPlan(studentId){
         const sqlQuery = `UPDATE STUDENTS SET type = "", hasStudyPlan = 0 WHERE id = ?;`;
 
@@ -214,8 +298,7 @@ class Controller {
         });
     }
 
-    //Delete all the courses of a student studyplan
-    //TO be checked
+
     async deleteStudyPlanCourses(studentId){
         const sqlQuery = `DELETE FROM STUDY_PLAN WHERE studentId = ?`;
         
@@ -231,8 +314,7 @@ class Controller {
         });
     }
 
-    //When deleteing studyplan this function reduces the enrolledStudents by one for each course
-    //TO be checked
+
     async modifyEnrolledStudentsInStudyPlanCourses(studentId){
         const sqlQuery = `SELECT courseCode FROM STUDY_PLAN WHERE studentId = ?`;
 

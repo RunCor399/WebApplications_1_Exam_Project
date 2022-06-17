@@ -116,7 +116,6 @@ app.get('/courses', async (req,res)=>{
   let courses = await controller.getAllCourses();
   const fullCourses = [];
 
-  //MOVE INTO A UTILITY FUNCTION
   for(course of courses){
     let preparatoryCourse;
     let incompatibleCourses;

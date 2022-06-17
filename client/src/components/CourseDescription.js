@@ -169,7 +169,7 @@ function CourseMain(props){
                 <Col>
                     <Row>
                         <h6 className="courseMaxLabel col-md-5">Max Students:</h6> 
-                        <h6 className="courseMax col-md-3">{props.course.maxStudents === null ? "/" : props.course.maxStudents}</h6> 
+                        <h6 className="courseMax col-md-2 mx-0">{props.course.maxStudents === null ? "/" : props.course.maxStudents}</h6> 
                     </Row>
                 </Col>
             </Row>

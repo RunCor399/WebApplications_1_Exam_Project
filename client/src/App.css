@@ -248,7 +248,7 @@ h2.title-text {
 }
 
 .courseMaxLabel {
-  padding-left: 51px !important;
+  padding-left: 64px !important;
 }
 
 .courseEnrolledLabel {
@@ -299,7 +299,7 @@ h2 > .accordion-button:not(.collapsed) {
 }
 
 .minCFUCol {
-  padding-left: 4px !important;
+  /* padding-left: 4px !important; */
 }
 
 

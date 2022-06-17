@@ -104,7 +104,7 @@ function MainRoute(props) {
             </Col> : ""}
           </Row>
           {minCreditsConstraint ? <Row className="mt-3 mb-3">
-            <Alert className="col-md-8 offset-md-2 course-error" variant="danger">Total credits are below min credits</Alert>
+            <Alert className="col-md-8 offset-md-2 course-error" variant="danger">Total credits are below minimum amount of credits</Alert>
           </Row> : ""}
           <Row>
             {props.hasStudyPlan && props.loggedIn ? <Col className="offset-md-2 col-md-8">
