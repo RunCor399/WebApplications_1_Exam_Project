@@ -30,7 +30,7 @@ app.use(express.json());
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
 
 
-// // Passport: set up local strategy
+// Passport: set up local strategy
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
     const user = await controller.getUser(username, password)
     if(!user)
@@ -43,9 +43,8 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
     cb(null, user);
   });
   
-  passport.deserializeUser(function (user, cb) { // this user is id + email + name
+  passport.deserializeUser(function (user, cb) { 
     return cb(null, user);
-    // if needed, we can do extra check here (e.g., double check that the user is still in the database, etc.)
   });
 
 
@@ -85,9 +84,6 @@ app.post('/api/sessions', function(req, res, next) {
   })(req, res, next);
 });
 
-// app.post('/api/sessions', passport.authenticate('local'), (req, res) => {
-//     res.status(201).json(req.user);
-//   });
 
 // GET /api/sessions/current
 app.get('/api/sessions/current', (req, res) => {
@@ -137,12 +133,11 @@ app.get('/courses', async (req,res)=>{
     })
 
     fullCourses.push({course: course, preparatoryCourseDetails : preparatoryCourse, incompatibleCourses : incompatibleCourses});
-
-    
   }
 
   return res.status(200).json(fullCourses);
 });
+
 
 app.post('/studyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
@@ -185,6 +180,7 @@ app.post('/hasStudyPlan', isLoggedIn, async (req,res)=>{
   }
 });
 
+
 app.put('/addStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
@@ -196,9 +192,9 @@ app.put('/addStudyPlan', isLoggedIn, async (req,res)=>{
     return res.status(error.getCode()).send(error.getMessage());
   });
 
-  console.log(result);
   return res.status(200).json(result);
 });
+
 
 app.delete('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
@@ -214,27 +210,16 @@ app.delete('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
   return res.status(200).json(result);
 });
 
-app.post('/addCourseToStudyPlan', isLoggedIn, async (req,res)=>{
+
+app.post('/modifyCoursesInStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
 
-  console.log(body["studentId"], body["courseCode"]);
-  await controller.addCourseToStudyPlan(body["studentId"], body["courseCode"]).then(() => {
+  await controller.modifyCoursesInStudyPlan(body["studentId"], body["courses"]).then(() => {
     return res.status(200);
   }).catch((error) => {
+    console.log(error);
     return res.status(error.getCode()).send(error.getMessage());
   });
 });
 
-
-app.delete('/removeCourseFromStudyPlan', isLoggedIn, async (req,res)=>{
-  const controller = req.app.get('controller');
-  const body = req.body;
-
-  console.log(body["studentId"], body["courseCode"]);
-  await controller.removeCourseFromStudyPlan(body["studentId"], body["courseCode"]).then(() => {
-    return res.status(200);
-  }).catch((error) => {
-    return res.status(error.getCode()).send(error.getMessage());
-  });
-});

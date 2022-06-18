@@ -81,14 +81,12 @@ class Controller {
     async getCourseByCode(code){
         const sqlQuery = `SELECT C.code AS code, C.name AS name, C.credits AS credits FROM COURSES C WHERE C.code = ?`;
 
-        //console.log(code);
         return new Promise((resolve, reject) => {
             this.#db.all(sqlQuery, code, (err, rows) => {
                 if (err) {
                     console.log("Database get error: err", err);
                     reject(new Exceptions(500));
                 } else {
-                    //console.log(rows);
                     resolve(rows);
                 }
             });
@@ -104,14 +102,13 @@ class Controller {
                     console.log("Database get error: err", err);
                     reject(new Exceptions(500));
                 } else {
-                    //console.log(rows);
                     resolve(rows);
                 }
             });
         });
     }
 
-
+    //can be removed and used getCourseById instead (add prepCourse column in attributes)
     async getPreparatoryCourse(courseCode){
         const sqlQuery = `SELECT preparatoryCourse FROM COURSES WHERE code = ?`;
 
@@ -128,80 +125,116 @@ class Controller {
     }
 
 
+    async checkPreparatoryCourses(courses){
+        let result;
 
-    async checkPreparatoryCourse(courseCode, studyPlan){
-        const prepCourse = await this.getPreparatoryCourse(courseCode);
+        for(let prepCourse of courses){
+            result = false;
+            if(prepCourse.preparatoryCourse === null || prepCourse.preparatoryCourse === undefined){
+                continue;
+            }
 
-        const result = studyPlan.filter((course) => course.code === prepCourse);
-
-        return result.length === 1 ? true : false;
-        // false -> not ok, true -> ok
-
-
-    }
-
-    async checkIncompatibleCourses(courseCode, studyPlan){
-        //check the function to get incompatible
-        const incompatibleCourses = await this.getIncompatibleCourses(courseCode);
-
-        for(let incompatibleCourse of incompatibleCourses){
-            for(let spCourse of studyPlan){
-                if(incompatibleCourse.code === spCourse.code){
-                    return false;
+            for(let spCourse of courses){
+                if(spCourse.code === prepCourse.preparatoryCourse.code){
+                    result = true;
                 }
+            }
+
+            if(!result){
+                return false;
             }
         }
 
         return true;
     }
 
-    async checkAlreadyInStudyPlan(courseCode, studyPlan){
-        const result = studyPlan.filter((spCourse) => spCourse.code === courseCode);
+    async checkIncompatibleCourses(courses){
+        let incompatibleCourses, result = false;
 
-        return result.length === 1 ? false : true; 
+        for(let course of courses){
+            incompatibleCourses = await this.getIncompatibleCourses(course.code);
+
+            if(incompatibleCourses.length === 0){
+                continue;
+            }
+
+            for(let spCourse of courses){
+                let count = incompatibleCourses.filter((incCourse) => incCourse.code === spCourse.code);
+
+                if(count.length >= 1){
+                    return false;
+                } 
+            }
+        }
+
+        return true;
     }
 
+    async checkAlreadyInStudyPlan(courses){
+        for(let course of courses){
+            let result = courses.filter((spCourse) => spCourse.code === course.code);
 
-    async checkCreditsMaxBoundary(courseCode, studyPlan, studentId){
-        const courseCredits = (await this.getCourseByCode(courseCode))[0].credits;
-        const currentStudyPlanCredits = studyPlan.map((spCourse) => spCourse.credits).reduce((partial, value) => partial + value, 0);
-        const studentType = (await this.getStudentType(studentId))[0].type;
-
-        const typeToMaxCFU = {"partime" : 40, "fulltime" : 80}
-        if(currentStudyPlanCredits + courseCredits > typeToMaxCFU[studentType]){
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-
-    async checkCourseConstraints(studentId, courseCode){
-        const studyPlan = await this.getStudyPlan(studentId);
-
-        if(!this.checkPreparatoryCourse(courseCode, studyPlan)){
-            return false;
-        }
-        if(!this.checkIncompatibleCourses(courseCode, studyPlan)){
-            return false;
-        }
-        if(!this.checkAlreadyInStudyPlan(courseCode, studyPlan)){
-            return false;
-        }
-        if(!this.checkCreditsMaxBoundary(courseCode, studyPlan, studentId)){
-            return false;
+            if(result.length > 1){
+                return false;
+            }
         }
 
         return true;
     }
 
 
-    async addCourseToStudyPlan(studentId, courseCode){
-        if(!this.checkCourseConstraints(studentId, courseCode)){
-            return new Exceptions(500);
+    async checkCreditsBoundaries(courses, studentId){
+        const studentType = (await this.getStudentType(studentId))[0].type;
+        const typeToBoundaries = {"partime" : {min : 20, max : 40}, "fulltime" : {min : 60, max : 80}};
+        
+        let creditsTotal = courses.map((spCourse) => spCourse.credits).reduce((partial, value) => partial + value, 0);
+
+        return creditsTotal >= typeToBoundaries[studentType].min && creditsTotal <= typeToBoundaries[studentType].max; 
+    }
+
+
+    async checkCourseConstraints(studentId, courses){
+        let resPrepChecks = await this.checkPreparatoryCourses(courses);
+        let resIncompChecks = await this.checkIncompatibleCourses(courses);
+        let resAlreadyChecks = await this.checkAlreadyInStudyPlan(courses);
+        let resBoundaryChecks = await this.checkCreditsBoundaries(courses, studentId);
+
+
+        console.log(resPrepChecks, resIncompChecks, resAlreadyChecks, resBoundaryChecks);
+        return resPrepChecks && resIncompChecks && resAlreadyChecks && resBoundaryChecks;
+    }
+
+
+    async modifyCoursesInStudyPlan(studentId, courses){
+        let result = await this.checkCourseConstraints(studentId, courses);
+ 
+        if(!result){
+            reject(new Exceptions(401));
         }
 
+
+        await this.modifyEnrolledStudentsInStudyPlanCourses(studentId).then(async () => {
+            await this.deleteStudyPlanCourses(studentId).catch((err) => {
+                console.log(err);
+                reject(new Exceptions(500));
+            })
+        }).catch((err) => {
+            console.log(err);
+            reject(new Exceptions(500));
+        })
+        
+
+       
+        courses.map(async (course) => {
+            await this.addCourseToStudyPlan(studentId, course.code).catch((err) => {
+                console.log(err);
+                reject(new Exceptions(500));
+            })
+        })
+    }
+
+
+    async addCourseToStudyPlan(studentId, courseCode){
         const sqlQuery = `INSERT INTO STUDY_PLAN (studentId, courseCode) VALUES (?, ?)`;
 
         return new Promise((resolve, reject) => {
@@ -212,7 +245,6 @@ class Controller {
                 } 
                 else {
                     await this.updateEnrolledStudents("add", courseCode).then(() => {
-                        console.log("Deleted ", courseCode, " from student ", studentId);
                         resolve(rows);
                     }).catch((err) => {
                         console.log(err);
@@ -223,30 +255,6 @@ class Controller {
         });
     }
 
-
-    async removeCourseFromStudyPlan(studentId, courseCode){
-        const sqlQuery = `DELETE FROM STUDY_PLAN WHERE studentId = ? AND courseCode = ?`;
-
-        return new Promise((resolve, reject) => {
-            this.#db.all(sqlQuery, studentId, courseCode, async (err, rows) => {
-                if (err) {
-                    console.log("Database get error: err", err);
-                    reject(new Exceptions(500));
-                } 
-                else {
-                    await this.updateEnrolledStudents("sub", courseCode).then(() => {
-                        console.log("Deleted ", courseCode, " from student ", studentId);
-                        resolve(rows);
-                    }).catch((err) => {
-                        console.log(err);
-                        reject(new Exceptions(500));
-                    })
-                }
-            });
-        });
-    }
-
-    //TO be checked
     async updateEnrolledStudents(op, courseCode){
         let sqlQuery;
         if(op === "add"){
@@ -255,7 +263,6 @@ class Controller {
         else if(op === "sub"){
             sqlQuery = `UPDATE COURSES SET enrolledStudents = enrolledStudents - 1 WHERE code = ?`;
         }
-        console.log(sqlQuery);
         
         return new Promise((resolve, reject) => {
             this.#db.all(sqlQuery, courseCode, (err, rows) => {
@@ -279,11 +286,8 @@ class Controller {
                     console.log("Database get error: err", err);
                     reject(new Exceptions(500));
                 } else {
-                    console.log("update students succeeds");
                     await this.modifyEnrolledStudentsInStudyPlanCourses(studentId).then(async () => {
-                        console.log("modify enrolled succeeds");
                         await this.deleteStudyPlanCourses(studentId).then(() => {
-                            console.log("delete succeeds");
                             resolve(rows);
                         }).catch((err) => {
                             console.log(err);
@@ -347,7 +351,6 @@ class Controller {
                     console.log("Database get error: err", err);
                     reject(new Exceptions(500));
                 } else {
-                    console.log(rows);
                     resolve(rows);
                 }
             });

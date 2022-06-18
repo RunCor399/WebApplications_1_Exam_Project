@@ -53,7 +53,7 @@ function MainRoute(props) {
       }
       else if(value === "cancel"){
         if(props.creditsBoundaries.min <= computeTotalCredits()){
-          props.cancelStudyPlanChangelog();
+          props.cancelTemporaryStudyPlan();
           props.setMode("view");
           setMinCreditsConstraint(false);
         }
@@ -108,12 +108,12 @@ function MainRoute(props) {
           </Row> : ""}
           <Row>
             {props.hasStudyPlan && props.loggedIn ? <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"studyplan"} removeCourseFromStudyPlanChangelog={props.removeCourseFromStudyPlanChangelog} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} creditsBoundaries={props.creditsBoundaries} mode={props.mode} courses={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan}></CoursesTable>
+              <CoursesTable listType={"studyplan"} removeCourseFromTemporaryStudyPlan={props.removeCourseFromTemporaryStudyPlan} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} creditsBoundaries={props.creditsBoundaries} mode={props.mode} courses={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan}></CoursesTable>
             </Col> : ""}
           </Row>
           <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"courses"} addCourseToStudyPlanChangelog={props.addCourseToStudyPlanChangelog} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlanChangelog={props.studyPlanChangelog} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"courses"} addCourseToTemporaryStudyPlan={props.addCourseToTemporaryStudyPlan} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} courses={props.courses}></CoursesTable>
             </Col>
           </Row>
         </>

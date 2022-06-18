@@ -78,7 +78,10 @@ function CourseAccordion(props){
 
             setCourseErrors(myErrors);
         }
-    }, [props.mode === "edit", props.studyPlanChangelog])
+        else {
+            setCourseErrors([]);
+        }
+    }, [props.mode === "edit", props.studyPlan])
         
 
     return (
@@ -87,7 +90,7 @@ function CourseAccordion(props){
             <Accordion>
                 <Accordion.Item eventKey={course.code}>
                     <Accordion.Header>
-                        <CourseMain addCourseToStudyPlanChangelog={props.addCourseToStudyPlanChangelog} studyPlan={studyPlan} errors={courseErrors} mode={props.mode} course={course}></CourseMain>
+                        <CourseMain addCourseToTemporaryStudyPlan={props.addCourseToTemporaryStudyPlan} studyPlan={studyPlan} errors={courseErrors} mode={props.mode} course={course}></CourseMain>
                     </Accordion.Header>
                     <Accordion.Body>
                         <h5>Preparatory Course:</h5>
@@ -110,7 +113,7 @@ function CourseMain(props){
 
     const handleAdd = (event) => {
         event.stopPropagation();
-        props.addCourseToStudyPlanChangelog(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
+        props.addCourseToTemporaryStudyPlan(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, props.course.preparatoryCourse, undefined));
         // courseAlreadyTempPresent();
     }
 
@@ -201,7 +204,7 @@ function StudyPlanCourse(props){
     const handleRemove = (event) => {
         event.stopPropagation();
         if(!checkPreparatoryCourse()){
-            props.removeCourseFromStudyPlanChangelog(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
+            props.removeCourseFromTemporaryStudyPlan(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, undefined, undefined));
         }  
     }
 

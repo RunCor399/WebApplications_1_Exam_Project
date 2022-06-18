@@ -65,7 +65,7 @@
 -- INSERT INTO COURSE_INCOMPATIBILITY (courseCode, incompatibility)
 -- VALUES ("02LSNMP", "01GNLPD");
 
-  UPDATE COURSES SET enrolledStudents = 0 WHERE name="Challenge";
+  -- UPDATE COURSES SET enrolledStudents = 0 WHERE 1=1;
 
 --OFFICIAL QUERIES
 
@@ -87,7 +87,7 @@
 --        ("01URROV", "Computational intelligence ", 6, 0),
 --        ("01OUZPD", "Model based software design", 4, 0);
        
-
+UPDATE COURSES SET name = "Computational intelligence" WHERE code = "01URROV";
 
 -- INSERT INTO COURSES (code, name, credits, enrolledStudents, preparatoryCourse)
 -- VALUES ("05BIDOV", "Ingegneria del software", 6, 0, "02GOLOV"),

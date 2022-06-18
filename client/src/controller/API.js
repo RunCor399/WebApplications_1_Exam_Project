@@ -39,7 +39,6 @@ async function getStudyPlan(id){
     });
 
     const list = await response.json();
-    //console.log("list",list);
     if (response.ok) {
          return list.map((course)=>{ return new Course(course.code, course.name, course.credits, undefined, undefined, course.preparatoryCourse, undefined)});
     } 
@@ -65,7 +64,6 @@ async function hasStudyPlan(id){
     });
 
     const studyPlanInfo = await response.json();
-    //console.log("list",list);
     if (response.ok) {
          return studyPlanInfo;
     } 
@@ -93,11 +91,9 @@ async function addStudyPlan(studentId, type){
     const result = await response.json();
 
     if (response.ok) {
-         console.log("response ok");
          return true;
     } 
     else {
-      console.log("response not ok");
         return false;
     }
 } catch (ex) {
@@ -123,11 +119,33 @@ async function addCourseToStudyPlan(studentId, courseCode){
     });
 
     if (response.ok) {
-         console.log("response ok");
          return true;
     } 
     else {
-      console.log("response not ok");
+        return false;
+    }
+} catch (ex) {
+    throw ex;
+  }
+}
+
+async function modifyCoursesInStudyPlan(studentId, courses){
+  const url = APIURL + '/modifyCoursesInStudyPlan';
+
+  try {
+    const response = await fetch(url, {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({studentId : studentId, courses : courses}),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    });
+
+    if (response.ok) {
+         return true;
+    } 
+    else {
         return false;
     }
 } catch (ex) {
@@ -151,11 +169,9 @@ async function removeCourseFromStudyPlan(studentId, courseCode){
     });
 
     if (response.ok) {
-         console.log("response ok");
          return true;
     } 
     else {
-      console.log("response not ok");
         return false;
     }
 } catch (ex) {
@@ -182,11 +198,9 @@ async function deleteStudyPlan(studentId){
     const result = await response.json();
 
     if (response.ok) {
-      console.log("response ok");
       return true;
     } 
     else {
-      console.log("response not ok");
       return false;
     }
 } catch (ex) {
@@ -241,5 +255,5 @@ async function getUserInfo() {
       }
 }
 
-const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan, removeCourseFromStudyPlan};
+const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan, modifyCoursesInStudyPlan, removeCourseFromStudyPlan};
 export default API;
