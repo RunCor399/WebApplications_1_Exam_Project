@@ -1,5 +1,5 @@
 import { useState} from 'react';
-import {Form, Button, Row, Col, Div, Container} from 'react-bootstrap';
+import {Form, Button, Row, Col} from 'react-bootstrap';
 
 
 function LoginForm(props){
@@ -7,11 +7,6 @@ function LoginForm(props){
     const [password, setPassword] = useState('');
 
     const handleSubmit = (event) => {
-        // event.preventDefault();
-        // const credentials = { username, password };
-
-        // props.login(credentials);
-
         event.preventDefault();
         let emailFormat = true;
         let emailValidity = true;

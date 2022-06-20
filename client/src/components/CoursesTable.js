@@ -1,5 +1,5 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { Table, Accordion, Row, Col, Alert } from 'react-bootstrap';
+import { Table, Row, Col, Alert } from 'react-bootstrap';
 import { CourseAccordion, StudyPlanCourse } from './CourseDescription';
 import { useEffect, useState } from 'react';
 
@@ -28,8 +28,6 @@ function CoursesTable(props){
             setStudyPlanCredits(computeTotalCredits(courses));
         }
     }, [props.courses])
-
-    //console.log(props.creditsBoundaries)
 
     const checkPreparatoryConstraint = (constraint) => {
         setPrepCourseConstraint(constraint.value);

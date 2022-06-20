@@ -23,9 +23,18 @@ function TopNavbar(props){
     return (
         <>
             <Navbar className="navbar" variant="light">
-                <Col className="offset-md-1 col-md-2 logo-col">
+                {props.user.name !== undefined && <Col className="col-md-1 hello-message-col">
+                    <h5 className="hello-message">Hi {props.user.name}!</h5>
+                </Col>}
+
+                {props.user.name !== undefined ? 
+                <Col className="col-md-2 logo-col">
                     <FaBook className="site-logo col-md-2"></FaBook>
-                </Col>
+                </Col> : 
+                <Col className="col-md-2 logo-col offset-md-1">
+                    <FaBook className="site-logo col-md-2"></FaBook>
+                </Col>}
+
                 <Col className="offset-md-1 col-md-4 search-col">
                     <h2 className="title-text col-md-8">Study Plan</h2>
                 </Col>

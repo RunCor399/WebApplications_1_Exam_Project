@@ -46,8 +46,13 @@
 
 
 -- 
+--  INSERT INTO STUDENTS (name, type, hasStudyPlan, email, password, salt)
+--  VALUES ("caio", "", 0, "caio@polito.it", "1c596e10a5519d6a037aeb8fdeb728bd1c46b48ad887f24f3a636db4cf1c9177", "8765432112345678");
+
  INSERT INTO STUDENTS (name, type, hasStudyPlan, email, password, salt)
- VALUES ("caio", "", 0, "caio@polito.it", "1c596e10a5519d6a037aeb8fdeb728bd1c46b48ad887f24f3a636db4cf1c9177", "8765432112345678");
+ VALUES ("student3", "", 0, "student3@polito.it", "7e699a6015953e1bb48a94a71fb5fc16931a1c3256ac8f1e533d2fbb2dff2337", "1234432112344321"),
+        ("student4", "", 0, "student4@polito.it", "16d578921727f8977ea73fb34c842ca8954dd7567c35a484d7d28e5f0dc5e98b", "4321123443211234"),
+        ("student5", "", 0, "student5@polito.it", "6453b1dbc673ebcdcd642c597cfddaba39fb5f6b1349e112a7b9b1f3a97bbeba", "1111222233334444");
 
  -- UPDATE STUDENTS SET hasStudyPlan = 1, type="partime" WHERE email = "tizio@polito.it";
 

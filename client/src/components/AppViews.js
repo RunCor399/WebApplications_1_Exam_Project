@@ -25,7 +25,6 @@ function MainRoute(props) {
     const modeDict = {"view" : "Edit", "edit" : "Save"};
     const [minCreditsConstraint, setMinCreditsConstraint] = useState(false);
 
-    //console.log(props.creditsBoundaries);
     const computeTotalCredits = () => {
       let studyPlan;
       if(props.mode === "edit"){
@@ -77,12 +76,8 @@ function MainRoute(props) {
 
     return (
         <>
-          <TopNavbar message={props.message} setMessage={props.setMessage} loggedIn={props.loggedIn} logout={props.handleLogout}></TopNavbar>
+          <TopNavbar user={props.user} message={props.message} setMessage={props.setMessage} loggedIn={props.loggedIn} logout={props.handleLogout}></TopNavbar>
           <Row className="col-md-12 mt-5 mb-4">
-            {/* <Col className="offset-md-1 col-md-6">
-              <h2>Page title</h2>
-            </Col> */}
-
             {props.hasStudyPlan && props.loggedIn && props.mode === "view" ?
             <Col className="offset-md-10 col-md-1">
                <Button type='submit' className="edit-button" onClick={() => handleModeSubmit("edit")} variant='success'>Edit</Button>
@@ -124,7 +119,7 @@ function MainRoute(props) {
 function LoginRoute(props) {
   return(
     <>
-      <TopNavbar setMessage={props.setMessage} message={props.message}></TopNavbar>
+      <TopNavbar user={props.user} setMessage={props.setMessage} message={props.message}></TopNavbar>
       <Row>
         <Col className="pageTitleCol offset-md-4">
           <h1 className="pageTitle">Login</h1>

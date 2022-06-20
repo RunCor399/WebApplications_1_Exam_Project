@@ -9,10 +9,7 @@ function CreateStudyPlan(props){
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        //console.log(type);
         props.addStudyPlan(type);
-
     }
 
     return (

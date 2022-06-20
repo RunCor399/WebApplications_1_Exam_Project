@@ -199,13 +199,15 @@
 
 - `TopNavbar` (in `TopNavbar.js`): Navigation bar of the Web Application
 
-(only _main_ components, minor ones may be skipped)
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+![Screenshot](./img/screenshot.png)
 
 ## Users Credentials
 
-- username, password (plus any other requested info)
-- username, password (plus any other requested info)
+- Username: "tizio@polito.it", Password: "password"
+- Username: "caio@polito.it", Password: "password"
+- Username: "student3@polito.it", Password: "student3"
+- Username: "student4@polito.it", Password: "student4"
+- Username: "student5@polito.it", Password: "student5"

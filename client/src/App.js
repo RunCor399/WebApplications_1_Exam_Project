@@ -1,5 +1,5 @@
 import './App.css';
-import { Col, Container, Row, Alert} from 'react-bootstrap';
+import { Container} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Route, Routes, Navigate} from 'react-router-dom';
 import {MainRoute, DefaultRoute, LoginRoute} from './components/AppViews';
@@ -9,8 +9,6 @@ import API from './controller/API'
 
 
 function App() {
-
-  //states
   const [user, setUser] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
@@ -23,7 +21,7 @@ function App() {
 
   const getCourses = async () => {
     const courses = await API.getAllCourses().catch((err) => {
-      console.log("Get Courses error", err);
+      console.log(err);
     });
     setCourses(courses);
   }
@@ -157,11 +155,11 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                <MainRoute setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} initTemporaryStudyPlan={initTemporaryStudyPlan} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} saveTemporaryStudyPlan={saveTemporaryStudyPlan} addCourseToTemporaryStudyPlan={addCourseToTemporaryStudyPlan} removeCourseFromTemporaryStudyPlan={removeCourseFromTemporaryStudyPlan} cancelTemporaryStudyPlan={cancelTemporaryStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan} temporaryStudyPlan={temporaryStudyPlan}/>
+                <MainRoute user={user} setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} initTemporaryStudyPlan={initTemporaryStudyPlan} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} saveTemporaryStudyPlan={saveTemporaryStudyPlan} addCourseToTemporaryStudyPlan={addCourseToTemporaryStudyPlan} removeCourseFromTemporaryStudyPlan={removeCourseFromTemporaryStudyPlan} cancelTemporaryStudyPlan={cancelTemporaryStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan} temporaryStudyPlan={temporaryStudyPlan}/>
               } />
 
               <Route path='/login' element={
-                loggedIn ? <Navigate replace to='/'/> : <LoginRoute handleLogin={handleLogin} setMessage={setMessage} message={message}/>
+                loggedIn ? <Navigate replace to='/'/> : <LoginRoute user={user} handleLogin={handleLogin} setMessage={setMessage} message={message}/>
               } />
               
               <Route path='*' element={ <DefaultRoute/> } />
@@ -171,8 +169,6 @@ function App() {
       </>
   );
 }
-
-
 
 
 

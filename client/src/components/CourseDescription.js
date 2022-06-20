@@ -2,7 +2,7 @@ import '../App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Course } from "../model/course";
-import {Accordion, Table, Row, Col, Alert} from 'react-bootstrap';
+import {Accordion, Row, Col, Alert} from 'react-bootstrap';
 import { BsPlusCircleFill, BsCheckLg, BsTrashFill } from "react-icons/bs";
 import { useEffect, useState } from 'react';
 
@@ -81,6 +81,7 @@ function CourseAccordion(props){
                 checkIncompatibleCourses();
             }
 
+            checkMaxStudents();
             checkCreditsBoundaries();
             checkAlreadyInStudyPlan();
 
@@ -123,22 +124,13 @@ function CourseMain(props){
     const handleAdd = (event) => {
         event.stopPropagation();
         props.addCourseToTemporaryStudyPlan(new Course(props.course.code, props.course.name, props.course.credits, props.course.enrolledStudents, props.course.maxStudents, props.course.preparatoryCourse, undefined));
-        // courseAlreadyTempPresent();
     }
 
     const courseAlreadyPresent = () => {
         const result = props.errors.map((error) => error.errorCode).filter((code) => code === "already");
         return result.length > 0;
     }
-
-
-
-    useEffect(() => {
-        //console.log("here");
-        //courseAlreadyTempPresent();
-    }, [props.studyPlan]);
-
-        
+   
 
     return (
         <>
@@ -206,8 +198,6 @@ function CourseDetails(props){
 }
 
 function StudyPlanCourse(props){
-    
-    //console.log(props.studyPlan);
     const studyPlan = props.studyPlan;
 
     const handleRemove = (event) => {
@@ -236,13 +226,6 @@ function StudyPlanCourse(props){
             
             
             </tr>
-            {/* {prepCourseConstraint  ? <table>
-                <tbody>
-                    <tr>
-                        <Alert className="col-md-12 course-error" variant="danger">This course cannot be removed</Alert>
-                    </tr>
-                </tbody>
-            </table> : ""} */}
         </>
     );
 }

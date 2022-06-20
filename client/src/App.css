@@ -37,133 +37,6 @@
   }
 }
 
-/* 
-.container {
-  margin-left: 0;
-  width: 100%;
-  padding: 0;
-}
-
-Col.search-col {
-  margin-left: 10px;
-}
-
-.sidebar-col {
-  height: 100vh !important;
-}
-
-
-
-
-.site-logo  {
-  font-size: 20px;
-  margin-top: 5px;
-  color: white;
-}
-
-.logo-col{
-  display: flex;
-}
-
-.account-logo {
-  font-size: 35px;
-  color: white;
-  opacity: 60%;
-  margin-left: 440px;
-}
-
-.title-col {
-  margin-left: 0;
-}
-
-
-.sidebar-nav {
-  background-color: #e2e3e5;
-  align-items: flex-start;
-  height: 100vh !important;
-}
-
-
-
-.sidebar-link {
-  border-radius: 0 !important;
-  padding-top: 10px  !important;
-  padding-bottom: 10px  !important;
-  padding-left: 20px !important;
-  text-decoration: none !important;
-}
-
-.sidebar-link:hover {
-  background-color: #0f53ab !important;
-  color: white !important;
-  text-decoration: none !important;
-}
-
-.account-logo {
-  margin-left: 280px;
-}
-
-input.search-input {
-  width: 220px;
-  margin-left: 40px;
-}
-
-
-
-
-.bt-icon-filmrow {
-  color: black;
-}
-
-.filmrow-button {
- margin-right: 6px;
-}
-
-.favorite-icon {
-  color: blue;
-  margin-top: 8px !important;
-}
-
-h2.filter {
-  padding-right: 0 !important;
-}
-
-h2.filter-type {
-  margin-top: 7px;
-  padding: 0;
-}
-
-
-.filter-row {
-  margin-top: 15px !important;
-}
-
-.film-title-fav{
-  color: red;
-}
-
-.add-film-icon {
-  color: rgb(13, 110, 253);
-  font-size: 40px;
-}
-
-.add-film-button {
-  position: fixed;
-  bottom: 50px !important;
-  right: 50px !important;
-}
-
-.add-film-icon:hover {
-  color: red;
-} 
-
-.container {
-  margin-left: 0;
-  width: 100%;
-  padding: 0 ;
-}
-
-*/
 
 body {
   overflow-x: hidden;
@@ -249,11 +122,13 @@ h2.title-text {
 }
 
 .courseMaxLabel {
-  padding-left: 75px !important;
+  /* padding-left: 75px !important; */
+  padding-left: 12% !important;
 }
 
 .courseMax {
-  padding-left: 27px !important;
+  /* padding-left: 27px !important; */
+  padding-left: 4.4% !important;
 }
 
 .courseEnrolledLabel {
@@ -275,12 +150,12 @@ h2 > .accordion-button:not(.collapsed) {
 
 .course-error {
   padding: 5px 12px !important;
+  margin-bottom: 5px !important;
 }
 
-/* .maincourse-row {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-} */
+.maincourse-row {
+  margin-bottom: 1.5%;
+}
 
 .addCourseButton {
   font-size: 34px;
@@ -292,11 +167,6 @@ h2 > .accordion-button:not(.collapsed) {
   color: #198754;
 }
 
-/* .addCourseButton:hover {
-  font-size: 34px;
-  color: #198754;
-  background-color: white;
-} */
 
 .trash-icon {
   color: #B52E29;
@@ -310,6 +180,14 @@ h2 > .accordion-button:not(.collapsed) {
 
 .save-button-col {
   padding-left: 30px !important;
+}
+
+.hello-message {
+  color: white;
+}
+
+.hello-message-col {
+  margin-left: 1% !important;
 }
 
 
