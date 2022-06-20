@@ -206,8 +206,13 @@
 
 ## Users Credentials
 
-- Username: "tizio@polito.it", Password: "password"
-- Username: "caio@polito.it", Password: "password"
-- Username: "student3@polito.it", Password: "student3"
-- Username: "student4@polito.it", Password: "student4"
-- Username: "student5@polito.it", Password: "student5"
+- Username: `tizio@polito.it`, Password: `password`
+- Username: `caio@polito.it`, Password: `password`
+- Username: `student3@polito.it`, Password: `student3`
+- Username: `student4@polito.it`, Password: `student4`
+- Username: `student5@polito.it`, Password: `student5`
+
+
+## Notes
+- A file `setupQueries.sql` containing all the queries for creating and populating the database is available in the server folder
+- Server-side validation of the study plan has been tested via specific http requests defined in the file `testBackendChecks.http` available in the controller folder

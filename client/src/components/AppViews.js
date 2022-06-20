@@ -3,7 +3,6 @@ import { TopNavbar } from './TopNavbar';
 import { LoginForm } from './AuthComponents';
 import { CoursesTable } from './CoursesTable';
 import { CreateStudyPlan } from './CreateStudyPlanAccordion';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 function DefaultRoute() {
@@ -21,8 +20,6 @@ function DefaultRoute() {
 
 
 function MainRoute(props) {
-    const navigate = useNavigate();
-    const modeDict = {"view" : "Edit", "edit" : "Save"};
     const [minCreditsConstraint, setMinCreditsConstraint] = useState(false);
 
     const computeTotalCredits = () => {

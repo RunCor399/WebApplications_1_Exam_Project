@@ -88,7 +88,7 @@ async function addStudyPlan(studentId, type){
         },
     });
 
-    const result = await response.json();
+    await response.json();
 
     if (response.ok) {
          return true;
@@ -101,33 +101,6 @@ async function addStudyPlan(studentId, type){
   }
 }
 
-
-
-
-async function addCourseToStudyPlan(studentId, courseCode){
-  const url = APIURL + '/addCourseToStudyPlan';
-
-
-  try {
-    const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'include',
-        body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-    });
-
-    if (response.ok) {
-         return true;
-    } 
-    else {
-        return false;
-    }
-} catch (ex) {
-    throw ex;
-  }
-}
 
 async function modifyCoursesInStudyPlan(studentId, courses){
   const url = APIURL + '/modifyCoursesInStudyPlan';
@@ -155,10 +128,6 @@ async function modifyCoursesInStudyPlan(studentId, courses){
 
 
 
-
-
-
-
 async function deleteStudyPlan(studentId){
   const url = APIURL + '/deleteStudyPlan';
 
@@ -172,7 +141,7 @@ async function deleteStudyPlan(studentId){
         },
     });
 
-    const result = await response.json();
+    await response.json();
 
     if (response.ok) {
       return true;
@@ -227,10 +196,9 @@ async function getUserInfo() {
       if (response.ok) {
         return user;
       } else {
-        //Is it correct to throw this? it is shown in the log
-        throw user;  // an object with the error coming from the server
+        throw user;
       }
 }
 
-const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan, modifyCoursesInStudyPlan};
+const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, modifyCoursesInStudyPlan};
 export default API;
