@@ -1,10 +1,8 @@
 'use strict';
 
 var sqlite3 = require('sqlite3');
-const dayjs = require('dayjs');
 const Exceptions = require('./exceptions')
 const crypto = require('crypto');
-const { Console } = require('console');
 
 
 
@@ -109,7 +107,6 @@ class Controller {
         });
     }
 
-    //can be removed and used getCourseById instead (add prepCourse column in attributes)
     async getPreparatoryCourse(courseCode){
         const sqlQuery = `SELECT preparatoryCourse FROM COURSES WHERE code = ?`;
 
@@ -131,16 +128,13 @@ class Controller {
 
         for(let prepCourse of courses){
             result = false;
-            console.log(prepCourse.preparatoryCourse);
             if(prepCourse.preparatoryCourse === null || prepCourse.preparatoryCourse === undefined){
-                console.log("continues");
                 result = true;
                 continue;
             }
 
             for(let spCourse of courses){
                 if(spCourse.code === prepCourse.preparatoryCourse.code){
-                    console.log("found prep");
                     result = true;
                 }
             }
@@ -154,7 +148,7 @@ class Controller {
     }
 
     async checkIncompatibleCourses(courses){
-        let incompatibleCourses, result = false;
+        let incompatibleCourses;
 
         for(let course of courses){
             incompatibleCourses = await this.getIncompatibleCourses(course.code);

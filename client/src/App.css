@@ -190,6 +190,10 @@ h2 > .accordion-button:not(.collapsed) {
   margin-left: 1% !important;
 }
 
+.addCourseButton:hover {
+  color: #B52E29;
+}
+
 
 
 

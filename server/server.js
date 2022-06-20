@@ -10,7 +10,6 @@ const PORT = 3001;
 const app = new express();
 
 const Controller = require('./controller');
-const Exceptions = require('./exceptions');
 const cors = require('cors');
 
 app.use(morgan('dev'));
@@ -64,7 +63,7 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
 
 
 //LOGIN APIs
-//POST /api/sessions -> MOVE TOGETHER WITH passport vars IN ANOTHER ROUTER
+//POST /api/sessions
 app.post('/api/sessions', function(req, res, next) {
   passport.authenticate('local', (err, user, info) => {
     if (err)
@@ -117,7 +116,6 @@ app.get('/courses', async (req,res)=>{
     let incompatibleCourses;
 
     if(course.preparatoryCourse !== ""){
-      let result;
       await controller.getCourseByCode(course.preparatoryCourse).then((res) => {
         preparatoryCourse = res[0];
       }).catch((err) => {
@@ -138,7 +136,7 @@ app.get('/courses', async (req,res)=>{
   return res.status(200).json(fullCourses);
 });
 
-
+//Get a study plan by studentId
 app.post('/studyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
@@ -154,7 +152,7 @@ app.post('/studyPlan', isLoggedIn, async (req,res)=>{
 });
 
 
-
+//Check if student has studyPlan and return also if fulltime or partime
 app.post('/hasStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
@@ -181,6 +179,7 @@ app.post('/hasStudyPlan', isLoggedIn, async (req,res)=>{
 });
 
 
+//Add new study plan for student
 app.post('/addStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
@@ -196,6 +195,7 @@ app.post('/addStudyPlan', isLoggedIn, async (req,res)=>{
 });
 
 
+//Delete study plan for student
 app.delete('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
@@ -211,6 +211,7 @@ app.delete('/deleteStudyPlan', isLoggedIn, async (req,res)=>{
 });
 
 
+//Modify study plan for student
 app.post('/modifyCoursesInStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
