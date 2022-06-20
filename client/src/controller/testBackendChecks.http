@@ -1,0 +1,89 @@
+
+### Server-side checks, some courses information are wrong on purpose
+### in order to trigger only one specific error in each request
+
+### Login
+
+POST http://localhost:3001/api/sessions HTTP/1.1
+content-type: application/json
+
+{
+    "username" : "tizio@polito.it",
+    "password" : "password"
+}
+
+
+### Min credits check server-side
+
+POST http://localhost:3001/modifyCoursesInStudyPlan HTTP/1.1
+content-type: application/json
+
+{
+    "studentId" : 1,
+    "courses" : [{"code" : "01UDFOV", "name" : "Applicazioni Web I", "credits" : 6, "enrolledStudents" : 0},
+                 {"code" : "02GOLOV", "name" : "Architetture dei sistemi di elaborazione", "credits" : 12, "enrolledStudents" : 0}]
+    
+}
+
+
+### Max credits check server-side
+
+POST http://localhost:3001/modifyCoursesInStudyPlan HTTP/1.1
+content-type: application/json
+
+{
+    "studentId" : 1,
+    "courses" : [{"code" : "01UDFOV", "name" : "Applicazioni Web I", "credits" : 6, "enrolledStudents" : 0},
+                 {"code" : "02GOLOV", "name" : "Architetture dei sistemi di elaborazione", "credits" : 12, "enrolledStudents" : 0},
+                 {"code" : "01URROV", "name" : "Computational Intelligence", "credits" : 20, "enrolledStudents" : 0}]
+    
+}
+
+
+### Incompatible courses check
+
+POST http://localhost:3001/modifyCoursesInStudyPlan HTTP/1.1
+content-type: application/json
+
+{
+    "studentId" : 1,
+    "courses" : [{"code" : "01UDFOV", "name" : "Applicazioni Web I", "credits" : 6, "enrolledStudents" : 0},
+                 {"code" : "01TXYOV", "name" : "Web Applications I", "credits" : 22, "enrolledStudents" : 0}]
+    
+}
+
+
+### Preparatory courses check
+
+POST http://localhost:3001/modifyCoursesInStudyPlan HTTP/1.1
+content-type: application/json
+
+{
+    "studentId" : 1,
+    "courses" : [{"code" : "01TXSOV", "name" : "Web Applications II", "credits" : 40, "enrolledStudents" : 0}]
+    
+}
+
+
+### Already in study plan check
+POST http://localhost:3001/modifyCoursesInStudyPlan HTTP/1.1
+content-type: application/json
+
+{
+    "studentId" : 1,
+    "courses" : [{"code" : "01UDFOV", "name" : "Applicazioni Web I", "credits" : 20, "enrolledStudents" : 0},
+                 {"code" : "01UDFOV", "name" : "Applicazioni Web I", "credits" : 20, "enrolledStudents" : 0}] 
+    
+}
+
+
+### Max students checks
+
+POST http://localhost:3001/modifyCoursesInStudyPlan HTTP/1.1
+content-type: application/json
+
+{
+    "studentId" : 1,
+    "courses" : [{"code" : "01UDFOV", "name" : "Applicazioni Web I", "credits" : 40, "enrolledStudents" : 3, "maxStudents" : 3}] 
+    
+}

@@ -46,8 +46,8 @@
 
 
 -- 
--- INSERT INTO STUDENTS (name, type, hasStudyPlan, email, password, salt)
--- VALUES ("tizio", "", 0, "tizio@polito.it", "1405f25115e75b7782c6c73d07070f389780476c87d7a6f7525f3fc9d64073a7", "1234567887654321");
+ INSERT INTO STUDENTS (name, type, hasStudyPlan, email, password, salt)
+ VALUES ("caio", "", 0, "caio@polito.it", "1c596e10a5519d6a037aeb8fdeb728bd1c46b48ad887f24f3a636db4cf1c9177", "8765432112345678");
 
  -- UPDATE STUDENTS SET hasStudyPlan = 1, type="partime" WHERE email = "tizio@polito.it";
 
@@ -87,7 +87,9 @@
 --        ("01URROV", "Computational intelligence ", 6, 0),
 --        ("01OUZPD", "Model based software design", 4, 0);
        
-UPDATE COURSES SET name = "Computational intelligence" WHERE code = "01URROV";
+-- UPDATE COURSES SET name = "Computational intelligence" WHERE code = "01URROV";
+
+-- UPDATE COURSES SET maxStudents = NULL WHERE code = "01URROV";
 
 -- INSERT INTO COURSES (code, name, credits, enrolledStudents, preparatoryCourse)
 -- VALUES ("05BIDOV", "Ingegneria del software", 6, 0, "02GOLOV"),

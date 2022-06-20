@@ -4,6 +4,7 @@ var sqlite3 = require('sqlite3');
 const dayjs = require('dayjs');
 const Exceptions = require('./exceptions')
 const crypto = require('crypto');
+const { Console } = require('console');
 
 
 
@@ -130,12 +131,16 @@ class Controller {
 
         for(let prepCourse of courses){
             result = false;
+            console.log(prepCourse.preparatoryCourse);
             if(prepCourse.preparatoryCourse === null || prepCourse.preparatoryCourse === undefined){
+                console.log("continues");
+                result = true;
                 continue;
             }
 
             for(let spCourse of courses){
                 if(spCourse.code === prepCourse.preparatoryCourse.code){
+                    console.log("found prep");
                     result = true;
                 }
             }
@@ -145,7 +150,7 @@ class Controller {
             }
         }
 
-        return true;
+        return result;
     }
 
     async checkIncompatibleCourses(courses){
@@ -192,16 +197,29 @@ class Controller {
         return creditsTotal >= typeToBoundaries[studentType].min && creditsTotal <= typeToBoundaries[studentType].max; 
     }
 
+    async checkMaxStudents(courses){
+        let result = true;
+
+        courses.filter((spCourse) => (spCourse.maxStudents !== null || spCourse.maxStudents !== undefined))
+               .map((spCourse) => {
+                    if(spCourse.enrolledStudents === spCourse.maxStudents){
+                        result = false;
+                    }
+        });
+
+
+        return result;
+    }
+
 
     async checkCourseConstraints(studentId, courses){
         let resPrepChecks = await this.checkPreparatoryCourses(courses);
         let resIncompChecks = await this.checkIncompatibleCourses(courses);
         let resAlreadyChecks = await this.checkAlreadyInStudyPlan(courses);
         let resBoundaryChecks = await this.checkCreditsBoundaries(courses, studentId);
+        let resMaxStudentsChecks = await this.checkMaxStudents(courses);
 
-
-        console.log(resPrepChecks, resIncompChecks, resAlreadyChecks, resBoundaryChecks);
-        return resPrepChecks && resIncompChecks && resAlreadyChecks && resBoundaryChecks;
+        return resPrepChecks && resIncompChecks && resAlreadyChecks && resBoundaryChecks && resMaxStudentsChecks;
     }
 
 
@@ -209,18 +227,18 @@ class Controller {
         let result = await this.checkCourseConstraints(studentId, courses);
  
         if(!result){
-            reject(new Exceptions(401));
+            return new Exceptions(411);
         }
 
 
         await this.modifyEnrolledStudentsInStudyPlanCourses(studentId).then(async () => {
             await this.deleteStudyPlanCourses(studentId).catch((err) => {
                 console.log(err);
-                reject(new Exceptions(500));
+                return new Exceptions(500);
             })
         }).catch((err) => {
             console.log(err);
-            reject(new Exceptions(500));
+            return new Exceptions(500);
         })
         
 
@@ -228,7 +246,7 @@ class Controller {
         courses.map(async (course) => {
             await this.addCourseToStudyPlan(studentId, course.code).catch((err) => {
                 console.log(err);
-                reject(new Exceptions(500));
+                return new Exceptions(500);
             })
         })
     }

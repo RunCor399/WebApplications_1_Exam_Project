@@ -80,7 +80,7 @@ async function addStudyPlan(studentId, type){
 
   try {
     const response = await fetch(url, {
-        method: 'PUT',
+        method: 'POST',
         credentials: 'include',
         body: JSON.stringify({studentId : studentId, type : type}),
         headers: {
@@ -154,30 +154,7 @@ async function modifyCoursesInStudyPlan(studentId, courses){
 }
 
 
-async function removeCourseFromStudyPlan(studentId, courseCode){
-  const url = APIURL + '/removeCourseFromStudyPlan';
 
-
-  try {
-    const response = await fetch(url, {
-        method: 'DELETE',
-        credentials: 'include',
-        body: JSON.stringify({studentId : studentId, courseCode : courseCode}),
-        headers: {
-          'Content-Type': 'application/json'
-        },
-    });
-
-    if (response.ok) {
-         return true;
-    } 
-    else {
-        return false;
-    }
-} catch (ex) {
-    throw ex;
-  }
-}
 
 
 
@@ -255,5 +232,5 @@ async function getUserInfo() {
       }
 }
 
-const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan, modifyCoursesInStudyPlan, removeCourseFromStudyPlan};
+const API = {getAllCourses, getUserInfo, logout, login, getStudyPlan, hasStudyPlan, addStudyPlan, deleteStudyPlan, addCourseToStudyPlan, modifyCoursesInStudyPlan};
 export default API;

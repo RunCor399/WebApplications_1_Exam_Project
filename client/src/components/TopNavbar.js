@@ -1,7 +1,7 @@
 import '../App.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BsCollectionPlay, BsPersonCircle } from 'react-icons/bs';
+import { BsCollectionPlay, BsPersonFill } from 'react-icons/bs';
 import { FaBook } from 'react-icons/fa'
 import { GoSignOut, GoSignIn } from 'react-icons/go'
 import {Navbar, Col, Alert, Row} from 'react-bootstrap';
@@ -36,7 +36,7 @@ function TopNavbar(props){
                 </a> 
                 :
                 <a href="" onClick={(event) => {handleLoginRedirect(event)}} className="">
-                    <GoSignIn className="account-logo"></GoSignIn>
+                    <BsPersonFill className="account-logo"></BsPersonFill>
                 </a>}
                 </Col>
             </Navbar>

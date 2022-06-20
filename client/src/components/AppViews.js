@@ -44,6 +44,7 @@ function MainRoute(props) {
 
       if(value === "delete"){
         setMinCreditsConstraint(false);
+        props.setMode("view");
         props.deleteStudyPlan();
       }
       else if(value === "edit"){
@@ -77,7 +78,7 @@ function MainRoute(props) {
     return (
         <>
           <TopNavbar message={props.message} setMessage={props.setMessage} loggedIn={props.loggedIn} logout={props.handleLogout}></TopNavbar>
-          <Row className="col-md-12 mt-5">
+          <Row className="col-md-12 mt-5 mb-4">
             {/* <Col className="offset-md-1 col-md-6">
               <h2>Page title</h2>
             </Col> */}
@@ -87,7 +88,7 @@ function MainRoute(props) {
                <Button type='submit' className="edit-button" onClick={() => handleModeSubmit("edit")} variant='success'>Edit</Button>
             </Col> : ""}
 
-            {props.hasStudyPlan && props.loggedIn && props.mode === "edit" ? <Col className="offset-md-8 col-md-1">
+            {props.hasStudyPlan && props.loggedIn && props.mode === "edit" ? <Col className="offset-md-8 col-md-1 save-button-col">
                <Button type='submit' className="edit-button" onClick={() => handleModeSubmit("save")} variant='success'>Save</Button>
             </Col> : ""}
 
@@ -123,7 +124,7 @@ function MainRoute(props) {
 function LoginRoute(props) {
   return(
     <>
-      <TopNavbar></TopNavbar>
+      <TopNavbar setMessage={props.setMessage} message={props.message}></TopNavbar>
       <Row>
         <Col className="pageTitleCol offset-md-4">
           <h1 className="pageTitle">Login</h1>
@@ -131,7 +132,7 @@ function LoginRoute(props) {
       </Row>
       <Row>
         <Col>
-          <LoginForm login={props.handleLogin}/>
+          <LoginForm login={props.handleLogin} setMessage={props.setMessage} />
         </Col>
       </Row>
     </>

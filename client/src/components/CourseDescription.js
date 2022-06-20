@@ -61,6 +61,14 @@ function CourseAccordion(props){
         }
     }
 
+    const checkMaxStudents = () => {
+        if(course.enrolledStudents === course.maxStudents){
+            let error = "This course has reached the maximum amount of students";
+            let code = "max";
+            myErrors.push({errorCode: code, errorMsg : error});
+        }
+    }
+
 
 
     useEffect(() => {
@@ -79,7 +87,8 @@ function CourseAccordion(props){
             setCourseErrors(myErrors);
         }
         else {
-            setCourseErrors([]);
+            checkMaxStudents();
+            setCourseErrors(myErrors);
         }
     }, [props.mode === "edit", props.studyPlan])
         
@@ -113,7 +122,7 @@ function CourseMain(props){
 
     const handleAdd = (event) => {
         event.stopPropagation();
-        props.addCourseToTemporaryStudyPlan(new Course(props.course.code, props.course.name, props.course.credits, undefined, undefined, props.course.preparatoryCourse, undefined));
+        props.addCourseToTemporaryStudyPlan(new Course(props.course.code, props.course.name, props.course.credits, props.course.enrolledStudents, props.course.maxStudents, props.course.preparatoryCourse, undefined));
         // courseAlreadyTempPresent();
     }
 

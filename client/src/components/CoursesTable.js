@@ -44,7 +44,7 @@ function CoursesTable(props){
     return (
         <>
             <Row>
-                <Col className="col-md-4">
+                <Col className="col-md-4 px-0">
                     <h2>{titleDict[props.listType]}</h2>
                 </Col>
                 {props.listType === "studyplan" && <Col className="col-md-2 minCFUCol">

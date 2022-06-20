@@ -161,7 +161,7 @@ function App() {
               } />
 
               <Route path='/login' element={
-                loggedIn ? <Navigate replace to='/'/> : <LoginRoute handleLogin={handleLogin}/>
+                loggedIn ? <Navigate replace to='/'/> : <LoginRoute handleLogin={handleLogin} setMessage={setMessage} message={message}/>
               } />
               
               <Route path='*' element={ <DefaultRoute/> } />

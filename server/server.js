@@ -181,7 +181,7 @@ app.post('/hasStudyPlan', isLoggedIn, async (req,res)=>{
 });
 
 
-app.put('/addStudyPlan', isLoggedIn, async (req,res)=>{
+app.post('/addStudyPlan', isLoggedIn, async (req,res)=>{
   const controller = req.app.get('controller');
   const body = req.body;
   let result;

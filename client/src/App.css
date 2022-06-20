@@ -235,7 +235,8 @@ h2.title-text {
 }
 
 .coursesTable {
-  margin-top: 120px;
+  margin-top: 60px !important;
+  margin-bottom: 100px !important;
 }
 
 .courseCFUDiv {
@@ -248,11 +249,15 @@ h2.title-text {
 }
 
 .courseMaxLabel {
-  padding-left: 64px !important;
+  padding-left: 75px !important;
+}
+
+.courseMax {
+  padding-left: 27px !important;
 }
 
 .courseEnrolledLabel {
-  padding-left: 18px !important;
+  padding-left: 41px !important;
 }
 
 .accordion-button {
@@ -299,7 +304,12 @@ h2 > .accordion-button:not(.collapsed) {
 }
 
 .minCFUCol {
-  /* padding-left: 4px !important; */
+   padding-left: 3px !important; 
+   padding-top: 6px !important;
+}
+
+.save-button-col {
+  padding-left: 30px !important;
 }
 
 
