@@ -42,10 +42,12 @@ function MainRoute(props) {
         setMinCreditsConstraint(false);
         props.setMode("view");
         props.deleteStudyPlan();
+        props.setTempCourses([]);
       }
       else if(value === "edit"){
         props.initTemporaryStudyPlan();
         props.setMode("edit");
+        props.setTempCourses(props.courses);
         setMinCreditsConstraint(false);
       }
       else if(value === "cancel"){
@@ -57,6 +59,7 @@ function MainRoute(props) {
         else {
           setMinCreditsConstraint(true);
         }
+        props.setTempCourses([]);
       }
       else if(value === "save"){
         if(props.creditsBoundaries.min <= computeTotalCredits()){
@@ -67,6 +70,8 @@ function MainRoute(props) {
         else {
           setMinCreditsConstraint(true);
         }
+        
+        props.setTempCourses([]);
       }
     }
 
@@ -106,7 +111,7 @@ function MainRoute(props) {
           </Row>
           <Row>
             <Col className="offset-md-2 col-md-8">
-              <CoursesTable listType={"courses"} addCourseToTemporaryStudyPlan={props.addCourseToTemporaryStudyPlan} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} courses={props.courses}></CoursesTable>
+              <CoursesTable listType={"courses"} addCourseToTemporaryStudyPlan={props.addCourseToTemporaryStudyPlan} creditsBoundaries={props.creditsBoundaries}  mode={props.mode} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} courses={props.mode === "edit" ? props.tempCourses : props.courses}></CoursesTable>
             </Col>
           </Row>
         </>

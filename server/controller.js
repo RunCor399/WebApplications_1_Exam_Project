@@ -191,10 +191,27 @@ class Controller {
         return creditsTotal >= typeToBoundaries[studentType].min && creditsTotal <= typeToBoundaries[studentType].max; 
     }
 
-    async checkMaxStudents(courses){
-        let result = true;
+    async checkMaxStudents(courses, studentId){
+        let oldStudyPlan = await this.getStudyPlan(studentId);
+        let result = true, flag;
+        let newCourses = [];
 
-        courses.filter((spCourse) => (spCourse.maxStudents !== null || spCourse.maxStudents !== undefined))
+        for(let newCourse of courses){
+            flag = false;
+            for(let oldCourse of oldStudyPlan){
+                if(newCourse.code === oldCourse.code){
+                    flag = true;
+                }
+            }
+
+            if(!flag){
+                newCourses.push(newCourse);
+            }
+        }
+
+        console.log(newCourses);
+
+        newCourses.filter((spCourse) => (spCourse.maxStudents !== null || spCourse.maxStudents !== undefined))
                .map((spCourse) => {
                     if(spCourse.enrolledStudents === spCourse.maxStudents){
                         result = false;
@@ -211,8 +228,9 @@ class Controller {
         let resIncompChecks = await this.checkIncompatibleCourses(courses);
         let resAlreadyChecks = await this.checkAlreadyInStudyPlan(courses);
         let resBoundaryChecks = await this.checkCreditsBoundaries(courses, studentId);
-        let resMaxStudentsChecks = await this.checkMaxStudents(courses);
+        let resMaxStudentsChecks = await this.checkMaxStudents(courses, studentId);
 
+        console.log(resPrepChecks, resIncompChecks, resAlreadyChecks, resBoundaryChecks, resMaxStudentsChecks);
         return resPrepChecks && resIncompChecks && resAlreadyChecks && resBoundaryChecks && resMaxStudentsChecks;
     }
 
@@ -225,17 +243,16 @@ class Controller {
         }
 
 
-        await this.modifyEnrolledStudentsInStudyPlanCourses(studentId).then(async () => {
+        await this.modifyEnrolledStudentsInStudyPlanCourses(studentId).catch((err) => {
+            console.log(err);
+            return new Exceptions(500);
+        }).then(async () => {
             await this.deleteStudyPlanCourses(studentId).catch((err) => {
                 console.log(err);
                 return new Exceptions(500);
             })
-        }).catch((err) => {
-            console.log(err);
-            return new Exceptions(500);
         })
         
-
        
         courses.map(async (course) => {
             await this.addCourseToStudyPlan(studentId, course.code).catch((err) => {
@@ -256,6 +273,7 @@ class Controller {
                     reject(new Exceptions(500));
                 } 
                 else {
+                    console.log("added", courseCode);
                     await this.updateEnrolledStudents("add", courseCode).then(() => {
                         resolve(rows);
                     }).catch((err) => {

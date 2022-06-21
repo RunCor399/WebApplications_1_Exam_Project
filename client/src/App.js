@@ -13,6 +13,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const[courses, setCourses] = useState([]);
+  const[tempCourses, setTempCourses] = useState([]);
   const[studyPlan, setStudyPlan] = useState([])
   const[temporaryStudyPlan, setTemporaryStudyPlan] = useState([]);
   const[hasStudyPlan, setHasStudyPlan] = useState(false);
@@ -20,10 +21,12 @@ function App() {
   const[mode, setMode] = useState("view");
 
   const getCourses = async () => {
-    const courses = await API.getAllCourses().catch((err) => {
-      console.log(err);
-    });
-    setCourses(courses);
+    if(mode !== "edit"){
+      const courses = await API.getAllCourses().catch((err) => {
+        console.log(err);
+      });
+      setCourses(courses);
+    }
   }
   
   async function getStudyPlan() {
@@ -128,12 +131,34 @@ function App() {
   }
 
   const addCourseToTemporaryStudyPlan = async (course) => {
+    let tempCourses = [];
+    
+    courses.forEach((listCourse) => {
+      if(listCourse.code === course.code){
+        listCourse.enrolledStudents += 1;
+      }
+
+      tempCourses.push(listCourse);
+    });
+    
+    setTempCourses(tempCourses);      
     setTemporaryStudyPlan([...temporaryStudyPlan, course]);
   }
 
   const removeCourseFromTemporaryStudyPlan = async (course) => {
     const updatedTempStudyPlan = temporaryStudyPlan.filter((entry) => entry.code !== course.code);
 
+    let tempCourses = [];
+    
+    courses.forEach((listCourse) => {
+      if(listCourse.code === course.code){
+        listCourse.enrolledStudents -= 1;
+      }
+
+      tempCourses.push(listCourse);
+    });
+
+    setTempCourses(tempCourses);
     setTemporaryStudyPlan(updatedTempStudyPlan);
   }
 
@@ -155,7 +180,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path='/' element={
-                <MainRoute user={user} setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} initTemporaryStudyPlan={initTemporaryStudyPlan} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} saveTemporaryStudyPlan={saveTemporaryStudyPlan} addCourseToTemporaryStudyPlan={addCourseToTemporaryStudyPlan} removeCourseFromTemporaryStudyPlan={removeCourseFromTemporaryStudyPlan} cancelTemporaryStudyPlan={cancelTemporaryStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} studyPlan={studyPlan} temporaryStudyPlan={temporaryStudyPlan}/>
+                <MainRoute user={user} setMessage={setMessage} message={message} loggedIn={loggedIn} mode={mode} setMode={setMode} creditsBoundaries={creditsBoundaries} initTemporaryStudyPlan={initTemporaryStudyPlan} addStudyPlan={addStudyPlan} deleteStudyPlan={deleteStudyPlan} saveTemporaryStudyPlan={saveTemporaryStudyPlan} addCourseToTemporaryStudyPlan={addCourseToTemporaryStudyPlan} removeCourseFromTemporaryStudyPlan={removeCourseFromTemporaryStudyPlan} cancelTemporaryStudyPlan={cancelTemporaryStudyPlan} hasStudyPlan={hasStudyPlan} handleLogout={handleLogout} courses={courses} tempCourses={tempCourses} setTempCourses={setTempCourses} studyPlan={studyPlan} temporaryStudyPlan={temporaryStudyPlan}/>
               } />
 
               <Route path='/login' element={

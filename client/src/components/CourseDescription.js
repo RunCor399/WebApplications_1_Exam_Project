@@ -63,7 +63,7 @@ function CourseAccordion(props){
 
     const checkMaxStudents = () => {
         if(course.enrolledStudents === course.maxStudents){
-            let error = "This course has reached the maximum amount of students";
+            let error = "This course has reached the maximum number of students";
             let code = "max";
             myErrors.push({errorCode: code, errorMsg : error});
         }
@@ -119,8 +119,6 @@ function CourseAccordion(props){
 }
 
 function CourseMain(props){
-    const [tempAlreadyPresent, setTempAlreadyPresent] = useState(false);
-
     const handleAdd = (event) => {
         event.stopPropagation();
         props.addCourseToTemporaryStudyPlan(new Course(props.course.code, props.course.name, props.course.credits, props.course.enrolledStudents, props.course.maxStudents, props.course.preparatoryCourse, undefined));
@@ -142,7 +140,7 @@ function CourseMain(props){
                 <Col className='col-md-7'>
                     <h3 className="courseName">{props.course.name}</h3>
                 </Col>
-                {props.mode === "edit" && props.errors.length === 0 && !tempAlreadyPresent && <Col>
+                {props.mode === "edit" && props.errors.length === 0 && !courseAlreadyPresent() && <Col>
                     <BsPlusCircleFill onClick={(event) => {handleAdd(event)}} className="addCourseButton mt-1"></BsPlusCircleFill>
                 </Col>}
                 {props.mode === "edit" && courseAlreadyPresent() &&
@@ -151,7 +149,7 @@ function CourseMain(props){
                 </Col>
                 }
             </Row>
-            {props.errors.length > 0 && props.mode == "edit" && <Row>
+            {props.errors.length > 0 && props.mode === "edit" && <Row>
                 {props.errors.map((error) => {return(<Alert key={props.errors.indexOf(error)} className="col-md-12 course-error" variant="danger">{error.errorMsg}</Alert>)})}
             </Row>}
 
