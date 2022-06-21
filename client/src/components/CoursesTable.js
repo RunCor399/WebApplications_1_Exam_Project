@@ -76,9 +76,9 @@ function CoursesTable(props){
                     <tbody>
                         
                         { props.listType === "courses" ?
-                        courses.map((course) => {return(<CourseAccordion key={course.code} addCourseToTemporaryStudyPlan={props.addCourseToTemporaryStudyPlan}  mode={props.mode} computeTotalCredits={computeTotalCredits} creditsBoundaries={props.creditsBoundaries} studyPlan={props.studyPlan} course={course}  />)})
+                        courses.map((course) => {return(<CourseAccordion key={course.code + "courses"} addCourseToTemporaryStudyPlan={props.addCourseToTemporaryStudyPlan}  mode={props.mode} computeTotalCredits={computeTotalCredits} creditsBoundaries={props.creditsBoundaries} studyPlan={props.studyPlan} course={course}  />)})
                         :
-                        courses.map((course) => {return(<StudyPlanCourse key={course.code} setPreparatoryCourseConstraint={checkPreparatoryConstraint} mode={props.mode} course={course} studyPlan={props.studyPlan} removeCourseFromTemporaryStudyPlan={props.removeCourseFromTemporaryStudyPlan}></StudyPlanCourse>)})
+                        courses.map((course) => {return(<StudyPlanCourse key={course.code + "studyplan"} setPreparatoryCourseConstraint={checkPreparatoryConstraint} mode={props.mode} course={course} studyPlan={props.studyPlan} removeCourseFromTemporaryStudyPlan={props.removeCourseFromTemporaryStudyPlan}></StudyPlanCourse>)})
                         }
                     </tbody>
                 </Table>
