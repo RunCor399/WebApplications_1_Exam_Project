@@ -55,23 +55,22 @@ function MainRoute(props) {
           props.cancelTemporaryStudyPlan();
           props.setMode("view");
           setMinCreditsConstraint(false);
+          props.setTempCourses([]);
         }
         else {
           setMinCreditsConstraint(true);
         }
-        props.setTempCourses([]);
       }
       else if(value === "save"){
         if(props.creditsBoundaries.min <= computeTotalCredits()){
           props.saveTemporaryStudyPlan();
           props.setMode("view");
           setMinCreditsConstraint(false);
+          props.setTempCourses([]);
         }
         else {
           setMinCreditsConstraint(true);
         }
-        
-        props.setTempCourses([]);
       }
     }
 

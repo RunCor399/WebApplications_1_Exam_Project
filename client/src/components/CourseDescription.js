@@ -206,12 +206,36 @@ function StudyPlanCourse(props){
     }
 
     const checkPreparatoryCourse = () => {
-        let result = studyPlan.filter((spCourse) => spCourse.code === props.course.preparatoryCourse);
+        let result = false;
+        let spCoursePreparatoryFor, constraint;
+        
+        let coursesWithPrep = studyPlan.filter((spCourse) => spCourse.preparatoryCourse !== null)
+                                       .filter((spCourse) => spCourse.preparatoryCourse !== undefined);
 
-        let constraint = {value : result.length, courseName : props.course.name, preparatoryCode : props.course.preparatoryCourse}
-        result.length === 1 ? props.setPreparatoryCourseConstraint(constraint) : props.setPreparatoryCourseConstraint(constraint);
+        for(let spCourse of coursesWithPrep){
+                if(spCourse.preparatoryCourse.code === props.course.code){
+                    result = true;
+                    spCoursePreparatoryFor = spCourse;
+                }
 
-        return result.length;
+                if(spCourse.preparatoryCourse === props.course.code){
+                    result = true;
+                    spCoursePreparatoryFor = spCourse;
+                }
+        }  
+
+        
+
+        if(result){
+            constraint = {value: result, courseName : props.course.name, spPreparatoryFor : spCoursePreparatoryFor.name};
+        }
+        else {
+            constraint = {value: result, courseName : undefined, spPreparatoryFor : undefined};
+        }
+
+        props.setPreparatoryCourseConstraint(constraint);
+
+        return result;
     }
 
     return (

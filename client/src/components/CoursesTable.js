@@ -8,7 +8,7 @@ function CoursesTable(props){
     const [studyPlanCredits, setStudyPlanCredits] = useState(0);
     const [prepCourseConstraint, setPrepCourseConstraint] = useState(false);
     const [constraintCourseName, setConstraintCourseName] = useState("");
-    const [constraintPrepCode, setconstraintPrepCode] = useState("");
+    const [constraintPrepName, setConstraintPrepName] = useState("");
 
 
     let courses = props.courses;
@@ -24,6 +24,7 @@ function CoursesTable(props){
 
 
     useEffect(() => {
+        setPrepCourseConstraint(false);
         if(props.listType === "studyplan"){
             setStudyPlanCredits(computeTotalCredits(courses));
         }
@@ -32,7 +33,7 @@ function CoursesTable(props){
     const checkPreparatoryConstraint = (constraint) => {
         setPrepCourseConstraint(constraint.value);
         setConstraintCourseName(constraint.courseName);
-        setconstraintPrepCode(constraint.preparatoryCode);
+        setConstraintPrepName(constraint.spPreparatoryFor);
     }
 
 
@@ -78,7 +79,7 @@ function CoursesTable(props){
                         }
                     </tbody>
                 </Table>
-                {prepCourseConstraint ? <Alert className="col-md-12 course-error" variant="danger">{constraintCourseName} cannot be removed: {constraintPrepCode} is preparatory</Alert> : ""}
+                {props.mode === "edit" && prepCourseConstraint ? <Alert className="col-md-12 course-error-prep" variant="danger">{constraintCourseName} cannot be removed as it is a preparatory course for {constraintPrepName} </Alert> : ""}
         </>
     );
 }
