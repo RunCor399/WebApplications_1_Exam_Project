@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 
 
 function CoursesTable(props){
+    /* study plan current credits */
     const [studyPlanCredits, setStudyPlanCredits] = useState(0);
+
+    /* These states keep track of a course that cannot be removed from study plan because of a preparatory course constraint*/
     const [prepCourseConstraint, setPrepCourseConstraint] = useState(false);
     const [constraintCourseName, setConstraintCourseName] = useState("");
     const [constraintPrepName, setConstraintPrepName] = useState("");

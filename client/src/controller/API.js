@@ -115,6 +115,7 @@ async function modifyCoursesInStudyPlan(studentId, courses){
         },
     });
 
+
     if (response.ok) {
          return true;
     } 

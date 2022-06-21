@@ -103,6 +103,7 @@ function App() {
   };
 
 
+  /* Create a new study plan */
   const addStudyPlan = async (type) => {
     const result = await API.addStudyPlan(user.id, type);
 
@@ -115,6 +116,7 @@ function App() {
     }  
   }
 
+  /* Delete current study plan */
   const deleteStudyPlan = async () => {
     const result = await API.deleteStudyPlan(user.id);
 
@@ -126,10 +128,12 @@ function App() {
     }  
   }
 
+  /* Initialization of the temporary study plan */
   const initTemporaryStudyPlan = async () => {
     setTemporaryStudyPlan(studyPlan);
   }
 
+  /* Add course to temp study plan */
   const addCourseToTemporaryStudyPlan = async (course) => {
     let tempCourses = [];
     
@@ -145,6 +149,7 @@ function App() {
     setTemporaryStudyPlan([...temporaryStudyPlan, course]);
   }
 
+  /* Remove course from temp study plan */
   const removeCourseFromTemporaryStudyPlan = async (course) => {
     const updatedTempStudyPlan = temporaryStudyPlan.filter((entry) => entry.code !== course.code);
 
@@ -162,8 +167,14 @@ function App() {
     setTemporaryStudyPlan(updatedTempStudyPlan);
   }
 
+  /* Save the temp study plan, client-side valiation has already been done while the study plan was being edited*/
   const saveTemporaryStudyPlan = async () => {
-    await API.modifyCoursesInStudyPlan(user.id, temporaryStudyPlan);
+    await API.modifyCoursesInStudyPlan(user.id, temporaryStudyPlan).then((res) => {
+      if(!res){
+        setMessage({msg: `Cannot perform update of the study plan, try again later`, type: 'danger'});
+      }
+    })
+
 
     setTemporaryStudyPlan([]);
    }

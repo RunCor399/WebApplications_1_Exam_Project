@@ -134,7 +134,8 @@ class Controller {
             }
 
             for(let spCourse of courses){
-                if(spCourse.code === prepCourse.preparatoryCourse.code){
+                console.log(spCourse);
+                if(spCourse.code === prepCourse.preparatoryCourse){
                     result = true;
                 }
             }
@@ -209,10 +210,8 @@ class Controller {
             }
         }
 
-        console.log(newCourses);
-
         newCourses.filter((spCourse) => (spCourse.maxStudents !== null || spCourse.maxStudents !== undefined))
-               .map((spCourse) => {
+                  .map((spCourse) => {
                     if(spCourse.enrolledStudents === spCourse.maxStudents){
                         result = false;
                     }
@@ -230,7 +229,7 @@ class Controller {
         let resBoundaryChecks = await this.checkCreditsBoundaries(courses, studentId);
         let resMaxStudentsChecks = await this.checkMaxStudents(courses, studentId);
 
-        console.log(resPrepChecks, resIncompChecks, resAlreadyChecks, resBoundaryChecks, resMaxStudentsChecks);
+
         return resPrepChecks && resIncompChecks && resAlreadyChecks && resBoundaryChecks && resMaxStudentsChecks;
     }
 
@@ -239,7 +238,7 @@ class Controller {
         let result = await this.checkCourseConstraints(studentId, courses);
  
         if(!result){
-            return new Exceptions(411);
+            throw new Exceptions(422);
         }
 
 
@@ -273,7 +272,6 @@ class Controller {
                     reject(new Exceptions(500));
                 } 
                 else {
-                    console.log("added", courseCode);
                     await this.updateEnrolledStudents("add", courseCode).then(() => {
                         resolve(rows);
                     }).catch((err) => {

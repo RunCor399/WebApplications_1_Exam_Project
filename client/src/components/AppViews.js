@@ -101,9 +101,10 @@ function MainRoute(props) {
             </Col> : ""}
           </Row>
           {minCreditsConstraint ? <Row className="mt-3 mb-3">
-            <Alert className="col-md-8 offset-md-2 course-error" variant="danger">Total credits are below minimum amount of credits</Alert>
+            <Alert dismissible className="col-md-8 offset-md-2 course-error" onClose={() => setMinCreditsConstraint(false)} variant="danger">Total credits are below minimum amount of credits</Alert>
           </Row> : ""}
           <Row>
+            {/* Same table component for the courses and the study plan */}
             {props.hasStudyPlan && props.loggedIn ? <Col className="offset-md-2 col-md-8">
               <CoursesTable listType={"studyplan"} removeCourseFromTemporaryStudyPlan={props.removeCourseFromTemporaryStudyPlan} studyPlan={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan} creditsBoundaries={props.creditsBoundaries} mode={props.mode} courses={props.mode === "edit" ? props.temporaryStudyPlan : props.studyPlan}></CoursesTable>
             </Col> : ""}

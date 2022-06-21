@@ -118,6 +118,7 @@ function CourseAccordion(props){
     );
 }
 
+/* Main information of courses */
 function CourseMain(props){
     const handleAdd = (event) => {
         event.stopPropagation();
@@ -180,6 +181,7 @@ function CourseMain(props){
     );
 }
 
+/* Details of each course */
 function CourseDetails(props){
     return (
         <>
@@ -195,9 +197,11 @@ function CourseDetails(props){
     );
 }
 
+/* Study plan course component */
 function StudyPlanCourse(props){
     const studyPlan = props.studyPlan;
 
+    /* Removes a course from the study plan if the preparatory course constrained is respected */
     const handleRemove = (event) => {
         event.stopPropagation();
         if(!checkPreparatoryCourse()){
@@ -205,6 +209,7 @@ function StudyPlanCourse(props){
         }  
     }
 
+    /* Check if the selected course to be removed is preparatory for another one currently present inside the study plan*/
     const checkPreparatoryCourse = () => {
         let result = false;
         let spCoursePreparatoryFor, constraint;
@@ -225,7 +230,6 @@ function StudyPlanCourse(props){
         }  
 
         
-
         if(result){
             constraint = {value: result, courseName : props.course.name, spPreparatoryFor : spCoursePreparatoryFor.name};
         }
@@ -245,8 +249,6 @@ function StudyPlanCourse(props){
                 <td className="col-md-6"><h3>{props.course.name}</h3></td>
                 <td className="col-md-2"><h4>{props.course.credits}</h4></td>
                 {props.mode === "edit" && <td className="col-md-1"><BsTrashFill className="trash-icon" onClick={(event) => {handleRemove(event)}}></BsTrashFill></td>}
-            
-            
             </tr>
         </>
     );

@@ -153,6 +153,10 @@ h2 > .accordion-button:not(.collapsed) {
   margin-bottom: 5px !important;
 }
 
+.course-error .btn-close {
+  padding-bottom: 2px !important;
+}
+
 .course-error-prep {
   padding: 5px 12px !important;
   margin-top: -80px !important;

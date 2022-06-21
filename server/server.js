@@ -94,7 +94,6 @@ app.get('/api/sessions/current', (req, res) => {
 
 // DELETE /api/session/current
 app.delete('/api/sessions/current', (req, res) => {
-  console.log("logout");
   req.logout(() => {
     res.end();
   });
