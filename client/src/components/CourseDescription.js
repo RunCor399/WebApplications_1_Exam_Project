@@ -108,7 +108,7 @@ function CourseAccordion(props){
 
                          <h5 className="mt-5">Incompatible Courses:</h5>
                          {incompatibleCourses.length === 0 ? <CourseDetails course=""></CourseDetails> :
-                         incompatibleCourses.map((incompatibleCourse) => {return(<CourseDetails key={incompatibleCourse.code +"courses"} course={incompatibleCourse ? incompatibleCourse : ""}  />)})}
+                         incompatibleCourses.map((incompatibleCourse) => {return(<CourseDetails key={incompatibleCourse.code +"courseDetails"} course={incompatibleCourse ? incompatibleCourse : ""}  />)})}
 
                     </Accordion.Body>
                 </Accordion.Item>
