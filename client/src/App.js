@@ -169,6 +169,7 @@ function App() {
 
   /* Save the temp study plan, client-side valiation has already been done while the study plan was being edited*/
   const saveTemporaryStudyPlan = async () => {
+    console.log(temporaryStudyPlan);
     await API.modifyCoursesInStudyPlan(user.id, temporaryStudyPlan).then((res) => {
       if(!res){
         setMessage({msg: `Cannot perform update of the study plan, try again later`, type: 'danger'});

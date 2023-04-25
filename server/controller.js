@@ -125,7 +125,7 @@ class Controller {
 
     async checkPreparatoryCourses(courses){
         let result;
-
+        console.log(courses);
         for(let prepCourse of courses){
             result = false;
             if(prepCourse.preparatoryCourse === null || prepCourse.preparatoryCourse === undefined){
@@ -134,13 +134,14 @@ class Controller {
             }
 
             for(let spCourse of courses){
-                console.log(spCourse);
-                if(spCourse.code === prepCourse.preparatoryCourse){
+               // console.log(spCourse);
+                if(spCourse.code === prepCourse.preparatoryCourse.code || spCourse.code === prepCourse.preparatoryCourse){
                     result = true;
                 }
             }
 
             if(!result){
+                //console.log("PPP", prepCourse.preparatoryCourse.code);
                 return false;
             }
         }
@@ -230,6 +231,7 @@ class Controller {
         let resMaxStudentsChecks = await this.checkMaxStudents(courses, studentId);
 
 
+        console.log(resPrepChecks, resIncompChecks, resAlreadyChecks, resBoundaryChecks, resMaxStudentsChecks);
         return resPrepChecks && resIncompChecks && resAlreadyChecks && resBoundaryChecks && resMaxStudentsChecks;
     }
 
